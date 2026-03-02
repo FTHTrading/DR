@@ -136,7 +136,7 @@ const t = {
         statusColor: '#10b981',
         kpi: '$90M basis · $70/MWh PPA target · 4 permits granted',
         desc: 'Fully permitted photovoltaic + battery storage project. 60/40 debt-equity stack. 8 funding pathways identified.',
-        href: '/dashboard/projects/sunfarm',
+        href: '/console/projects/sunfarm',
       },
       {
         icon: '🌿',
@@ -145,7 +145,7 @@ const t = {
         statusColor: '#f59e0b',
         kpi: '$593M total value · $93M land equity · 380 residential units',
         desc: 'Master-planned ecotourism destination district. Villas, commercial center, recreation, conservation. Land-contributed equity model.',
-        href: '/dashboard/projects/cabrera',
+        href: '/console/projects/cabrera',
       },
     ],
 
@@ -283,7 +283,7 @@ const t = {
         statusColor: '#10b981',
         kpi: '$90M base · $70/MWh PPA objetivo · 4 permisos otorgados',
         desc: 'Proyecto fotovoltaico + almacenamiento de baterías totalmente permitido. Estructura deuda-capital 60/40. 8 vías de financiamiento identificadas.',
-        href: '/dashboard/projects/sunfarm',
+        href: '/console/projects/sunfarm',
       },
       {
         icon: '🌿',
@@ -292,7 +292,7 @@ const t = {
         statusColor: '#f59e0b',
         kpi: '$593M valor total · $93M capital en tierra · 380 unidades residenciales',
         desc: 'Distrito destino ecoturístico planificado. Villas, centro comercial, recreación, conservación. Modelo de capital aportado en tierra.',
-        href: '/dashboard/projects/cabrera',
+        href: '/console/projects/cabrera',
       },
     ],
 
@@ -357,7 +357,7 @@ export default function LandingPage() {
               {d.nav.github}
             </a>
             <a
-              href="/dashboard"
+              href="/console"
               className="px-4 py-1.5 rounded bg-gold text-black font-bold hover:bg-yellow-500 transition-colors"
             >
               {d.nav.console}
@@ -384,7 +384,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="/dashboard"
+              href="/console"
               className="px-7 py-3 rounded-lg bg-gold text-black font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg shadow-gold/10"
             >
               {d.heroCta}
@@ -605,7 +605,7 @@ export default function LandingPage() {
         <p className="text-sm text-zinc-400 mb-10 max-w-xl mx-auto leading-relaxed">{d.ctaBody}</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="/dashboard"
+            href="/console"
             className="px-7 py-3 rounded-lg bg-gold text-black font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg shadow-gold/10"
           >
             {d.ctaConsole}

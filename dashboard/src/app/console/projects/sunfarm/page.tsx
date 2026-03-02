@@ -96,7 +96,7 @@ export default function SunFarmPage() {
       {/* Header */}
       <header className="border-b border-zinc-800 pb-4">
         <div className="flex items-center gap-2 mb-1">
-          <a href="/dashboard/projects" className="text-xs text-zinc-500 hover:text-zinc-300">
+          <a href="/console/projects" className="text-xs text-zinc-500 hover:text-zinc-300">
             ← Projects
           </a>
         </div>
@@ -263,7 +263,7 @@ export default function SunFarmPage() {
           SunFarm Platform ↗
         </a>
         <a
-          href="/dashboard/projects"
+          href="/console/projects"
           className="px-5 py-2 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:bg-zinc-900 transition-colors"
         >
           ← All Projects

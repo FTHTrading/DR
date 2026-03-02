@@ -1,0 +1,12 @@
+# DICS — Cloudflare Pages deployment
+# dr.optkas.org — Sovereign Infrastructure Intelligence
+
+name = "dics-dr"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Pages config
+pages_build_output_dir = ".vercel/output/static"
+
+# Environment variables for production
+# DATABASE_URL is set via Cloudflare Pages dashboard (encrypted)

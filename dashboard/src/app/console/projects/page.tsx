@@ -84,7 +84,7 @@ export default function ProjectsPage() {
         {projects.map((p) => (
           <a
             key={p.id}
-            href={`/dashboard/projects/${p.id === 'SUNFARM_BANI_50MW' ? 'sunfarm' : 'cabrera'}`}
+            href={`/console/projects/${p.id === 'SUNFARM_BANI_50MW' ? 'sunfarm' : 'cabrera'}`}
             className="group bg-zinc-950 border border-zinc-800 rounded-xl p-6 hover:border-zinc-600 transition-colors"
           >
             <div className="flex items-start justify-between mb-3">

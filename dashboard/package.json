@@ -1,11 +1,14 @@
 {
   "name": "dics-dashboard",
   "version": "1.0.0",
-  "description": "DICS Command Dashboard — live intelligence console",
+  "description": "DICS Command Console — sovereign infrastructure intelligence",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
+    "build:cf": "npx @cloudflare/next-on-pages",
+    "preview:cf": "npx wrangler pages dev .vercel/output/static",
+    "deploy": "npx wrangler pages deploy .vercel/output/static --project-name dics-dr",
     "start": "next start -p 3000",
     "lint": "next lint"
   },
@@ -19,7 +22,7 @@
     "swr": "^2.3.0"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.9.3",
+    "@cloudflare/next-on-pages": "^1.13.7",
     "@types/node": "^22.0.0",
     "@types/pg": "^8.11.10",
     "@types/react": "^18.3.12",
@@ -29,6 +32,7 @@
     "eslint-config-next": "^14.2.28",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "wrangler": "^3.99.0"
   }
 }
