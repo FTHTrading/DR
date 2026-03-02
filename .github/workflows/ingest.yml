@@ -1,0 +1,95 @@
+# ─────────────────────────────────────────────────────────────────
+# DICS Scheduled Ingestion — runs collector + extractor on a cron
+# Triggers every 6 hours, also manual via workflow_dispatch.
+# ─────────────────────────────────────────────────────────────────
+name: Scheduled Ingestion
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"           # Every 6 hours
+  workflow_dispatch:                 # Manual trigger
+
+concurrency:
+  group: dics-ingestion
+  cancel-in-progress: false          # Don't cancel mid-run
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Collector (Node.js) ──────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: collector/package-lock.json
+
+      - name: Install collector dependencies
+        working-directory: collector
+        run: npm ci
+
+      - name: Build collector
+        working-directory: collector
+        run: npm run build
+
+      - name: Run collector (one pass)
+        working-directory: collector
+        timeout-minutes: 10
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          LOG_LEVEL: info
+          COLLECTOR_USER_AGENT: "DICS-Collector/1.0 (+https://dr.optkas.org/bot)"
+          RESPECT_ROBOTS_TXT: "true"
+          FETCH_TIMEOUT_MS: "15000"
+          NODE_TLS_REJECT_UNAUTHORIZED: "0"
+        run: |
+          # The collector starts cron jobs and runs immediately.
+          # We wait for the initial pass to finish, then exit.
+          timeout 300 node dist/index.js &
+          COLLECTOR_PID=$!
+          # Wait for the initial crawl to settle (all sources processed once)
+          sleep 120
+          kill $COLLECTOR_PID 2>/dev/null || true
+          echo "Collector pass complete."
+
+      # ── Extractor (Python) ──────────────────────────────────────
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: extractor/requirements.txt
+
+      - name: Install extractor dependencies
+        working-directory: extractor
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          python -m spacy download en_core_web_sm
+
+      - name: Run extractor (one pass)
+        working-directory: extractor/src
+        timeout-minutes: 15
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          EMBEDDING_MODEL: "sentence-transformers/all-MiniLM-L6-v2"
+          EXTRACTOR_POLL_SECONDS: "5"
+          LOG_LEVEL: info
+        run: |
+          # Run extractor for up to 3 minutes, enough for one full batch
+          timeout 180 python main.py || true
+          echo "Extractor pass complete."
+
+      # ── Verify ──────────────────────────────────────────────────
+      - name: Check DB counts
+        working-directory: shared/db
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          node _check.js
+          node _status.js

@@ -1,14 +1,14 @@
-version: "3.9"
-
 # ────────────────────────────────────────────────────────────────────────
 # DICS Docker Compose
 #
 # Two modes:
-#   LOCAL:  docker compose up                  → uses local Postgres + Redis
-#   NEON:   docker compose --profile neon up   → uses Neon (set DATABASE_URL in .env)
+#   NEON :  docker compose --profile neon up -d   → Neon cloud DB (set DATABASE_URL in .env)
+#   LOCAL:  docker compose --profile local up -d  → local Postgres + Redis
 #
-# For Neon mode, the postgres service is skipped; collector + extractor read
+# Neon mode skips local Postgres and Redis. Collector + extractor read
 # DATABASE_URL from the .env file at the project root.
+#
+# Both services have restart: unless-stopped — they survive Docker restarts.
 # ────────────────────────────────────────────────────────────────────────
 
 services:
@@ -38,6 +38,7 @@ services:
     image: redis:7-alpine
     container_name: dics-redis
     restart: unless-stopped
+    profiles: ["local"]
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - redis-data:/data
@@ -57,20 +58,22 @@ services:
     container_name: dics-collector
     restart: unless-stopped
     profiles: ["neon"]
-    depends_on:
-      redis:
-        condition: service_healthy
     environment:
       DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: redis://redis:6379
       LOG_LEVEL: ${LOG_LEVEL:-info}
       COLLECTOR_USER_AGENT: ${COLLECTOR_USER_AGENT:-DICS-Collector/1.0 (+https://dr.optkas.org/bot)}
       RESPECT_ROBOTS_TXT: "true"
       FETCH_TIMEOUT_MS: "15000"
+      METRICS_PORT: "9092"
     volumes:
-      - ./config:/app/config:ro
+      - ./config:/config:ro
     ports:
-      - "9091:9091"
+      - "9092:9092"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   extractor:
     build:
@@ -84,6 +87,11 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
       EXTRACTOR_POLL_SECONDS: "30"
       LOG_LEVEL: ${LOG_LEVEL:-info}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # ── Collector (local mode — uses local Postgres) ──────────────────────
   collector-local:
@@ -106,9 +114,14 @@ services:
       RESPECT_ROBOTS_TXT: "true"
       FETCH_TIMEOUT_MS: "15000"
     volumes:
-      - ./config:/app/config:ro
+      - ./config:/config:ro
     ports:
       - "9091:9091"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   extractor-local:
     build:
@@ -125,6 +138,11 @@ services:
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
       EXTRACTOR_POLL_SECONDS: "30"
       LOG_LEVEL: ${LOG_LEVEL:-info}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres-data:
