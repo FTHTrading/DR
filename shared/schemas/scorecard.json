@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/scorecard",
+  "title": "ScoreCard",
+  "type": "object",
+  "required": ["claim_id", "credibility", "materiality", "recency", "opportunity", "risk", "composite"],
+  "properties": {
+    "claim_id":    { "type": "string", "format": "uuid" },
+    "credibility": { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Source tier + corroboration weight" },
+    "materiality": { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Capex size + strategic leverage" },
+    "recency":     { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Freshness relative to now" },
+    "opportunity": { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Monetizable gap signal" },
+    "risk":        { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Political/regulatory/FX/execution risk" },
+    "composite":   { "type": "number", "minimum": 0, "maximum": 1,
+                     "description": "Weighted aggregate score" },
+    "usd_amount":  { "type": ["integer", "null"] }
+  }
+}

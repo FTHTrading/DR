@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/claim",
+  "title": "Claim",
+  "type": "object",
+  "required": ["id", "doc_id", "statement", "excerpt"],
+  "properties": {
+    "id":              { "type": "string", "format": "uuid" },
+    "doc_id":          { "type": "string", "format": "uuid" },
+    "statement":       { "type": "string" },
+    "quantity":        { "type": ["number", "null"] },
+    "unit":            { "type": ["string", "null"] },
+    "who":             { "type": ["string", "null"] },
+    "what":            { "type": ["string", "null"] },
+    "where_text":      { "type": ["string", "null"] },
+    "when_text":       { "type": ["string", "null"] },
+    "excerpt":         { "type": "string", "description": "Verbatim source passage" },
+    "credibility":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "materiality":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "recency":         { "type": "number", "minimum": 0, "maximum": 1 },
+    "opportunity":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "risk":            { "type": "number", "minimum": 0, "maximum": 1 },
+    "composite_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "usd_amount":      { "type": ["integer", "null"] },
+    "created_at":      { "type": "string", "format": "date-time" }
+  }
+}

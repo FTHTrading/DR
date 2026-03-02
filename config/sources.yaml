@@ -1,0 +1,227 @@
+# DICS — Monitored Source Catalog
+# Every source must be legally accessible (public, no paywall bypass).
+# Tiers: 1=official, 2=multilateral/press, 3=industry, 4=corporate, 5=community
+
+policies:
+  max_requests_per_minute: 10
+  respect_robots: true
+  user_agent: "DICS-Collector/1.0 (+https://example.com/bot)"
+  timeout_ms: 15000
+  retry_count: 3
+  backoff_ms: 2000
+
+storage:
+  db_url: "${DATABASE_URL}"
+  raw_bucket: "dics-raw"
+  vector_db_url: "${DATABASE_URL}"   # pgvector in same PG instance
+
+alerts:
+  keywords:
+    - rare earth
+    - mining concession
+    - subsea cable
+    - data center
+    - solar ppa
+    - bess
+    - free zone
+    - spectrum auction
+    - mvno
+    - port expansion
+  entity_watchlist:
+    - Dominican Republic
+    - República Dominicana
+    - Cormidom
+    - Google
+    - Amazon
+    - Claro
+    - Altice
+    - AES Dominicana
+    - EGEHID
+  min_scores:
+    credibility: 0.6
+    materiality: 0.5
+    opportunity: 0.4
+
+sources:
+
+  # ── TIER 1: Official Government & Regulators ──────────────────────────────
+
+  - id: dr-minem
+    name: "Ministerio de Energía y Minas (DR)"
+    root_url: "https://mem.gob.do/noticias/"
+    type: html
+    tier: 1
+    tags: [mining, energy, policy]
+    refresh_interval_minutes: 120
+    allow_paths: ["/noticias/", "/publicaciones/"]
+    max_requests_per_minute: 5
+
+  - id: dr-indotel
+    name: "INDOTEL — Telecom Regulator (DR)"
+    root_url: "https://indotel.gob.do/noticias/"
+    type: html
+    tier: 1
+    tags: [telecom, policy, spectrum]
+    refresh_interval_minutes: 120
+    allow_paths: ["/noticias/", "/resoluciones/"]
+    max_requests_per_minute: 5
+
+  - id: dr-cnccmdl
+    name: "CDEEE — Energy Commission (DR)"
+    root_url: "https://www.cdeee.gob.do/noticias/"
+    type: html
+    tier: 1
+    tags: [energy, grid, policy]
+    refresh_interval_minutes: 120
+    max_requests_per_minute: 5
+
+  - id: dr-bancentral
+    name: "Banco Central DR — Press Releases"
+    root_url: "https://www.bancentral.gov.do/a/d/4003-notas-de-prensa"
+    type: html
+    tier: 1
+    tags: [finance, macro, FDI]
+    refresh_interval_minutes: 240
+    max_requests_per_minute: 5
+
+  - id: dr-dgii-tenders
+    name: "DR Government Procurement Portal (DGCP)"
+    root_url: "https://www.dgcp.gob.do/publicaciones/"
+    type: html
+    tier: 1
+    tags: [tenders, procurement, policy]
+    refresh_interval_minutes: 60
+    max_requests_per_minute: 5
+
+  - id: dr-ports-apordom
+    name: "APORDOM — Port Authority (DR)"
+    root_url: "https://apordom.gob.do/noticias/"
+    type: html
+    tier: 1
+    tags: [logistics, ports, policy]
+    refresh_interval_minutes: 180
+    max_requests_per_minute: 5
+
+  # ── TIER 2: Multilateral & Major Data Sources ──────────────────────────────
+
+  - id: worldbank-dr
+    name: "World Bank — Dominican Republic"
+    root_url: "https://www.worldbank.org/en/country/dominicanrepublic/overview"
+    type: html
+    tier: 2
+    tags: [macro, finance, demographics, development]
+    refresh_interval_minutes: 720
+    max_requests_per_minute: 3
+
+  - id: idb-dr
+    name: "IDB — Dominican Republic News"
+    root_url: "https://www.iadb.org/en/countries/dominican-republic/overview"
+    type: html
+    tier: 2
+    tags: [development, finance, infrastructure]
+    refresh_interval_minutes: 720
+    max_requests_per_minute: 3
+
+  - id: usgs-minerals
+    name: "USGS Mineral Resources — Caribbean"
+    root_url: "https://www.usgs.gov/centers/national-minerals-information-center/caribbean"
+    type: html
+    tier: 2
+    tags: [mining, rare_earth, geology]
+    refresh_interval_minutes: 1440
+    max_requests_per_minute: 3
+
+  - id: itu-dr
+    name: "ITU — Dominican Republic Telecom Stats"
+    root_url: "https://www.itu.int/en/ITU-D/Statistics/Pages/country.aspx?code=DOM"
+    type: html
+    tier: 2
+    tags: [telecom, demographics, broadband]
+    refresh_interval_minutes: 4320
+    max_requests_per_minute: 2
+
+  - id: submarinecablemap
+    name: "Submarine Cable Map (TeleGeography)"
+    root_url: "https://www.submarinecablemap.com/"
+    type: html
+    tier: 2
+    tags: [connectivity, cables, digital]
+    refresh_interval_minutes: 4320
+    max_requests_per_minute: 2
+
+  # ── TIER 3: Industry Trade Publications ───────────────────────────────────
+
+  - id: datacenterdynamics
+    name: "Data Center Dynamics"
+    root_url: "https://www.datacenterdynamics.com/en/"
+    type: html
+    tier: 3
+    tags: [digital, data_center, connectivity]
+    refresh_interval_minutes: 60
+    deny_paths: ["/subscribe", "/account"]
+    max_requests_per_minute: 5
+
+  - id: mining-journal-dr
+    name: "Mining Journal — Americas"
+    root_url: "https://www.miningjournal.com/americas/"
+    type: html
+    tier: 3
+    tags: [mining, rare_earth]
+    refresh_interval_minutes: 180
+    max_requests_per_minute: 5
+
+  - id: telegeography-news
+    name: "TeleGeography News"
+    root_url: "https://www.telegeography.com/research/telecom-resources/telecom-news/"
+    type: html
+    tier: 3
+    tags: [telecom, connectivity, cables]
+    refresh_interval_minutes: 120
+    max_requests_per_minute: 5
+
+  - id: pv-magazine-americas
+    name: "PV Magazine Americas (Solar/BESS)"
+    root_url: "https://pv-magazine-latam.com/"
+    type: html
+    tier: 3
+    tags: [energy, solar, bess]
+    refresh_interval_minutes: 120
+    max_requests_per_minute: 5
+
+  - id: joc-caribbean
+    name: "JOC — Caribbean Logistics"
+    root_url: "https://www.joc.com/maritime-news/trade-lanes/trans-atlantic_20110318"
+    type: html
+    tier: 3
+    tags: [logistics, ports, shipping]
+    refresh_interval_minutes: 240
+    max_requests_per_minute: 3
+
+  # ── TIER 4: Corporate Press Rooms ─────────────────────────────────────────
+
+  - id: google-blog-infra
+    name: "Google Blog — Infrastructure"
+    root_url: "https://blog.google/outreach-initiatives/connectivity/"
+    type: html
+    tier: 4
+    tags: [connectivity, digital, cables]
+    refresh_interval_minutes: 360
+    max_requests_per_minute: 5
+
+  - id: amazon-newsroom
+    name: "Amazon Newsroom"
+    root_url: "https://www.aboutamazon.com/news/tag/logistics"
+    type: html
+    tier: 4
+    tags: [logistics, digital, investment]
+    refresh_interval_minutes: 360
+    max_requests_per_minute: 5
+
+  - id: aes-corp-newsroom
+    name: "AES Corporation Press Releases"
+    root_url: "https://www.aes.com/newsroom/press-releases/"
+    type: html
+    tier: 4
+    tags: [energy, investment]
+    refresh_interval_minutes: 720
+    max_requests_per_minute: 3

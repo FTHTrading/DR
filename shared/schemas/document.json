@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/document",
+  "title": "Document",
+  "type": "object",
+  "required": ["id", "source_id", "url", "clean_text", "content_hash", "fetched_at", "tier"],
+  "properties": {
+    "id":           { "type": "string", "format": "uuid" },
+    "source_id":    { "type": "string" },
+    "url":          { "type": "string", "format": "uri" },
+    "title":        { "type": "string" },
+    "clean_text":   { "type": "string" },
+    "raw_html":     { "type": "string" },
+    "content_hash": { "type": "string", "description": "SHA-256 hex of clean_text" },
+    "status_code":  { "type": "integer" },
+    "tier":         { "type": "integer", "minimum": 1, "maximum": 5 },
+    "tags":         { "type": "array", "items": { "type": "string" } },
+    "fetched_at":   { "type": "string", "format": "date-time" },
+    "extracted_at": { "type": ["string", "null"], "format": "date-time" },
+    "failed_at":    { "type": ["string", "null"], "format": "date-time" }
+  }
+}

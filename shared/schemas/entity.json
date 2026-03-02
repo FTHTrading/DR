@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/entity",
+  "title": "Entity",
+  "type": "object",
+  "required": ["id", "doc_id", "type", "text", "normalized"],
+  "properties": {
+    "id":         { "type": "string", "format": "uuid" },
+    "doc_id":     { "type": "string", "format": "uuid" },
+    "type":       { "type": "string",
+                    "enum": ["PERSON","ORG","GPE","MONEY","QUANTITY","DATE","ASSET","PERMIT","AGENCY","PROJECT"] },
+    "text":       { "type": "string" },
+    "normalized": { "type": "string" },
+    "start_char": { "type": "integer" },
+    "end_char":   { "type": "integer" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "metadata":   { "type": "object" }
+  }
+}

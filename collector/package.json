@@ -1,0 +1,37 @@
+{
+  "name": "dics-collector",
+  "version": "1.0.0",
+  "description": "DICS Collector — scheduled web fetcher with rate limiting, dedup, and raw storage",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "axios": "^1.13.6",
+    "axios-retry": "^4.5.0",
+    "better-queue": "^3.8.12",
+    "cron": "^3.1.7",
+    "dotenv": "^16.4.5",
+    "jsdom": "^25.0.1",
+    "p-queue": "^8.0.1",
+    "pg": "^8.12.0",
+    "pino": "^9.5.0",
+    "robots-parser": "^3.0.1",
+    "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.19.13",
+    "@types/pg": "^8.11.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

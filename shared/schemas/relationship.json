@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/relationship",
+  "title": "Relationship",
+  "type": "object",
+  "required": ["id", "from_entity_id", "to_entity_id", "relation_type", "doc_id"],
+  "properties": {
+    "id":             { "type": "string", "format": "uuid" },
+    "from_entity_id": { "type": "string", "format": "uuid" },
+    "to_entity_id":   { "type": "string", "format": "uuid" },
+    "relation_type":  { "type": "string",
+                        "enum": ["finances","owns","operates","regulates","partners_with",
+                                 "employs","supplies","competes_with","awards_to"] },
+    "doc_id":         { "type": "string", "format": "uuid" },
+    "confidence":     { "type": "number", "minimum": 0, "maximum": 1 },
+    "created_at":     { "type": "string", "format": "date-time" }
+  }
+}

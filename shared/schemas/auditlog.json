@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/auditlog",
+  "title": "AuditLog",
+  "description": "Append-only immutable record of all system events",
+  "type": "object",
+  "required": ["id", "event_type", "created_at"],
+  "properties": {
+    "id":          { "type": "integer" },
+    "event_type":  { "type": "string",
+                     "examples": ["document.stored","extraction.completed",
+                                  "claim.promoted","alert.fired","user.access"] },
+    "entity_type": { "type": ["string", "null"] },
+    "entity_id":   { "type": ["string", "null"] },
+    "payload":     { "type": ["object", "null"] },
+    "created_at":  { "type": "string", "format": "date-time" }
+  }
+}

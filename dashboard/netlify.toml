@@ -1,0 +1,23 @@
+[build]
+  base    = "dashboard"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[dev]
+  framework = "next"
+  port      = 3000
+
+# Protect intelligence API routes — add Netlify access control here if needed
+# [[headers]]
+#   for = "/api/*"
+#   [headers.values]
+#     X-Robots-Tag = "noindex"

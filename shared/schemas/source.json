@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/source",
+  "title": "Source",
+  "type": "object",
+  "required": ["id", "name", "root_url", "type", "tier"],
+  "properties": {
+    "id":                        { "type": "string" },
+    "name":                      { "type": "string" },
+    "root_url":                  { "type": "string", "format": "uri" },
+    "type":                      { "type": "string", "enum": ["rss", "html", "api"] },
+    "tier":                      { "type": "integer", "minimum": 1, "maximum": 5 },
+    "tags":                      { "type": "array", "items": { "type": "string" } },
+    "refresh_interval_minutes":  { "type": "integer", "minimum": 1 },
+    "allow_paths":               { "type": "array", "items": { "type": "string" } },
+    "deny_paths":                { "type": "array", "items": { "type": "string" } },
+    "max_requests_per_minute":   { "type": "integer", "minimum": 1 }
+  }
+}
