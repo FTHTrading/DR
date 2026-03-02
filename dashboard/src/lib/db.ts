@@ -1,39 +1,18 @@
-import { Pool, neon } from '@neondatabase/serverless';
-
-let pool: Pool | null = null;
+import { neon } from '@neondatabase/serverless';
 
 /**
- * Neon serverless Postgres driver.
- * Uses WebSocket connections — works in Cloudflare Workers, Node.js, and Edge.
- * Drop-in replacement for node-postgres `pg.Pool`.
+ * Neon serverless Postgres driver — HTTP mode.
+ *
+ * Uses fetch-based queries (no WebSocket, no persistent pool).
+ * This avoids the Cloudflare Workers "Cannot perform I/O on behalf
+ * of a different request" error caused by singleton Pool objects
+ * sharing connections across request contexts.
  */
-export function getPool(): Pool {
-  if (!pool) {
-    const connectionString = process.env.DATABASE_URL ?? '';
-    if (!connectionString) {
-      console.warn('[db] DATABASE_URL is not set — database queries will fail');
-    }
-
-    pool = new Pool({
-      connectionString,
-      max: 2, // Serverless: keep pool minimal
-      idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 5_000,
-    });
-
-    pool.on('error', (err: Error) => {
-      console.error('[db] idle client error', err.message);
-    });
-  }
-  return pool;
-}
-
-/**
- * One-shot query via Neon's HTTP SQL endpoint.
- * Fastest for single queries — no WebSocket handshake needed.
- */
-export function sql() {
+function getSql() {
   const connectionString = process.env.DATABASE_URL ?? '';
+  if (!connectionString) {
+    console.warn('[db] DATABASE_URL is not set — database queries will fail');
+  }
   return neon(connectionString);
 }
 
@@ -41,11 +20,8 @@ export async function query<T extends object>(
   sql: string,
   params?: unknown[]
 ): Promise<T[]> {
-  const client = await getPool().connect();
-  try {
-    const result = await client.query<T>(sql, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
+  const exec = getSql();
+  // neon() supports (query, params) at runtime; cast to satisfy TS overloads
+  const rows = await (exec as Function)(sql, params ?? []);
+  return rows as T[];
 }
