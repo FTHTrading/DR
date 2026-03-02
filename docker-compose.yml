@@ -1,11 +1,24 @@
 version: "3.9"
 
+# ────────────────────────────────────────────────────────────────────────
+# DICS Docker Compose
+#
+# Two modes:
+#   LOCAL:  docker compose up                  → uses local Postgres + Redis
+#   NEON:   docker compose --profile neon up   → uses Neon (set DATABASE_URL in .env)
+#
+# For Neon mode, the postgres service is skipped; collector + extractor read
+# DATABASE_URL from the .env file at the project root.
+# ────────────────────────────────────────────────────────────────────────
+
 services:
 
+  # ── Local Postgres (only for local mode) ──────────────────────────────
   postgres:
     image: pgvector/pgvector:pg16
     container_name: dics-postgres
     restart: unless-stopped
+    profiles: ["local"]
     environment:
       POSTGRES_USER: dics
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
@@ -36,12 +49,50 @@ services:
       timeout: 5s
       retries: 5
 
+  # ── Collector (Neon mode — reads DATABASE_URL from .env) ──────────────
   collector:
     build:
       context: ./collector
       dockerfile: Dockerfile
     container_name: dics-collector
     restart: unless-stopped
+    profiles: ["neon"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      COLLECTOR_USER_AGENT: ${COLLECTOR_USER_AGENT:-DICS-Collector/1.0 (+https://dr.optkas.org/bot)}
+      RESPECT_ROBOTS_TXT: "true"
+      FETCH_TIMEOUT_MS: "15000"
+    volumes:
+      - ./config:/app/config:ro
+    ports:
+      - "9091:9091"
+
+  extractor:
+    build:
+      context: ./extractor
+      dockerfile: Dockerfile
+    container_name: dics-extractor
+    restart: unless-stopped
+    profiles: ["neon"]
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      EXTRACTOR_POLL_SECONDS: "30"
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+  # ── Collector (local mode — uses local Postgres) ──────────────────────
+  collector-local:
+    build:
+      context: ./collector
+      dockerfile: Dockerfile
+    container_name: dics-collector-local
+    restart: unless-stopped
+    profiles: ["local"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,12 +110,13 @@ services:
     ports:
       - "9091:9091"
 
-  extractor:
+  extractor-local:
     build:
       context: ./extractor
       dockerfile: Dockerfile
-    container_name: dics-extractor
+    container_name: dics-extractor-local
     restart: unless-stopped
+    profiles: ["local"]
     depends_on:
       postgres:
         condition: service_healthy

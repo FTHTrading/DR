@@ -15,6 +15,7 @@ export interface Metrics {
   collector_fetch_total: number;
   collector_fetch_ok: number;
   collector_fetch_fail: number;
+  collector_fetch_skipped: number;
   collector_robots_denied: number;
   collector_dedupe_skipped: number;
   collector_documents_saved: number;
@@ -26,6 +27,7 @@ const counters: Metrics = {
   collector_fetch_total: 0,
   collector_fetch_ok: 0,
   collector_fetch_fail: 0,
+  collector_fetch_skipped: 0,
   collector_robots_denied: 0,
   collector_dedupe_skipped: 0,
   collector_documents_saved: 0,

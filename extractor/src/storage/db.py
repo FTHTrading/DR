@@ -24,8 +24,8 @@ class Database:
     def __init__(self) -> None:
         self._dsn = os.environ["DATABASE_URL"]
         self._conn = psycopg2.connect(self._dsn)
-        register_vector(self._conn)
         self._conn.autocommit = False
+        register_vector(self._conn)
         log.info("extractor_db_connected")
 
     @contextmanager
