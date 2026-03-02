@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import type { ScoreBucket } from '@/lib/types';
+import { DEMO_METRICS } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -39,9 +40,11 @@ export function ScoreHistogram({ refreshInterval = 60000 }: { refreshInterval?: 
   );
 
   if (isLoading) return <div className="animate-pulse text-zinc-500 p-4 h-48" />;
-  if (error)     return <div className="text-dics-red p-4">Failed to load metrics.</div>;
 
-  const chartData = (data?.histogram ?? []).map((b) => ({
+  // Use demo data when API is unavailable (static export / no DB)
+  const metrics = error ? DEMO_METRICS : data;
+
+  const chartData = (metrics?.histogram ?? []).map((b) => ({
     ...b,
     fill: barColor(b.range),
   }));
@@ -50,14 +53,14 @@ export function ScoreHistogram({ refreshInterval = 60000 }: { refreshInterval?: 
     <div className="space-y-4">
       <div className="flex gap-6 text-sm">
         <span className="text-zinc-400">
-          Total claims: <strong className="text-zinc-100">{data?.total?.toLocaleString()}</strong>
+          Total claims: <strong className="text-zinc-100">{metrics?.total?.toLocaleString()}</strong>
         </span>
         <span className="text-zinc-400">
-          Avg score: <strong className="text-gold-400">{data?.avg_score?.toFixed(3)}</strong>
+          Avg score: <strong className="text-gold-400">{metrics?.avg_score?.toFixed(3)}</strong>
         </span>
         <span className="text-zinc-400">
           Above threshold (≥0.65):{' '}
-          <strong className="text-dics-green">{data?.above_threshold?.toLocaleString()}</strong>
+          <strong className="text-dics-green">{metrics?.above_threshold?.toLocaleString()}</strong>
         </span>
       </div>
       <ResponsiveContainer width="100%" height={220}>

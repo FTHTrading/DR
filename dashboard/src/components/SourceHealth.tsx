@@ -2,6 +2,7 @@
 
 import useSWR from 'swr';
 import type { SourceHealth } from '@/lib/types';
+import { DEMO_SOURCES } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -32,7 +33,9 @@ export function SourceHealthTable({ refreshInterval = 60000 }: { refreshInterval
   );
 
   if (isLoading) return <div className="animate-pulse text-zinc-500 p-4">Loading sources…</div>;
-  if (error)     return <div className="text-dics-red p-4">Failed to load source data.</div>;
+
+  // Use demo data when API is unavailable (static export / no DB)
+  const sources = error ? DEMO_SOURCES : data;
 
   return (
     <div className="overflow-x-auto">
@@ -47,7 +50,7 @@ export function SourceHealthTable({ refreshInterval = 60000 }: { refreshInterval
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-800">
-          {data?.map((src) => (
+          {sources?.map((src) => (
             <tr key={src.source_id} className="hover:bg-zinc-900 transition-colors">
               <td className="py-2 pr-4">
                 <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${tierBadge(src.tier)}`}>
@@ -66,7 +69,7 @@ export function SourceHealthTable({ refreshInterval = 60000 }: { refreshInterval
               <td className="py-2 text-zinc-400 text-xs">{timeAgo(src.last_fetched)}</td>
             </tr>
           ))}
-          {data?.length === 0 && (
+          {sources?.length === 0 && (
             <tr>
               <td colSpan={5} className="py-6 text-center text-zinc-500">No source data yet.</td>
             </tr>

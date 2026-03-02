@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from 'recharts';
 import type { RiskRow } from '@/lib/types';
+import { DEMO_RISK } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -33,10 +34,12 @@ export function RiskRadar({ refreshInterval = 60000 }: { refreshInterval?: numbe
   );
 
   if (isLoading) return <div className="animate-pulse text-zinc-500 p-4 h-64" />;
-  if (error)     return <div className="text-dics-red p-4">Failed to load risk data.</div>;
+
+  // Use demo data when API is unavailable (static export / no DB)
+  const rows = error ? DEMO_RISK : data;
 
   // Build radar data: each dim is a row, each sector is a key
-  const sectors = (data ?? []).slice(0, 6); // max 6 sectors for legibility
+  const sectors = (rows ?? []).slice(0, 6); // max 6 sectors for legibility
 
   const radarData = DIMS.map(({ key, label }) => {
     const row: Record<string, string | number> = { dim: label };

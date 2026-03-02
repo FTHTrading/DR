@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import type { ConvergenceIndex, ConvergenceSector } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-
 // Sector weights must sum to 1.0
 const SECTOR_WEIGHTS: Record<string, number> = {
   Energy:     0.30,

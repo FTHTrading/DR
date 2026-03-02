@@ -6,6 +6,7 @@ import { SourceHealthTable }    from '@/components/SourceHealth';
 import { AuditPanel }           from '@/components/AuditPanel';
 import { ConvergenceIndexTile } from '@/components/ConvergenceIndex';
 import { TrendCharts }          from '@/components/TrendCharts';
+import { DEMO_SIGNALS, DEMO_METRICS, DEMO_SOURCES } from '@/lib/demo-data';
 
 export default function DashboardPage() {
   return (
@@ -23,10 +24,10 @@ export default function DashboardPage() {
       {/* KPI row + Convergence Index */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 content-start">
-          <MetricCard label="Active Signals"    value="—" trend="up"      colorClass="text-dics-green" />
-          <MetricCard label="Avg Score"          value="—" unit="/ 1.0"    colorClass="text-gold-400" />
-          <MetricCard label="Above Threshold"    value="—" trend="up"      colorClass="text-dics-blue" />
-          <MetricCard label="Sources Monitored"  value={19}               colorClass="text-dics-teal" />
+          <MetricCard label="Active Signals"    value={DEMO_SIGNALS.length}            trend="up"      colorClass="text-dics-green" />
+          <MetricCard label="Avg Score"          value={DEMO_METRICS.avg_score.toFixed(2)} unit="/ 1.0"    colorClass="text-gold-400" />
+          <MetricCard label="Above Threshold"    value={DEMO_METRICS.above_threshold}    trend="up"      colorClass="text-dics-blue" />
+          <MetricCard label="Sources Monitored"  value={DEMO_SOURCES.length}            colorClass="text-dics-teal" />
         </div>
         <ConvergenceIndexTile refreshInterval={120_000} />
       </section>

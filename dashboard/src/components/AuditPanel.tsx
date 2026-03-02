@@ -2,6 +2,7 @@
 
 import useSWR from 'swr';
 import type { AuditSummary, ProofRecord } from '@/lib/types';
+import { DEMO_AUDIT, DEMO_PROOFS } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -18,8 +19,12 @@ function eventColor(type: string) {
 }
 
 export function AuditPanel({ refreshInterval = 60000 }: { refreshInterval?: number }) {
-  const { data: audit } = useSWR<AuditSummary>('/api/audit', fetcher, { refreshInterval });
-  const { data: proofs } = useSWR<ProofRecord[]>('/api/proof?limit=5', fetcher, { refreshInterval });
+  const { data: auditRaw, error: auditErr } = useSWR<AuditSummary>('/api/audit', fetcher, { refreshInterval });
+  const { data: proofsRaw, error: proofErr } = useSWR<ProofRecord[]>('/api/proof?limit=5', fetcher, { refreshInterval });
+
+  // Use demo data when API is unavailable (static export / no DB)
+  const audit  = auditErr ? DEMO_AUDIT  : auditRaw;
+  const proofs = proofErr ? DEMO_PROOFS : proofsRaw;
 
   return (
     <div className="space-y-6">

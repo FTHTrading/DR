@@ -10,7 +10,9 @@ import type {
   ProjectDetail,
 } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
+export function generateStaticParams() {
+  return [{ id: 'sunfarm-bani' }, { id: 'cabrera-eco' }];
+}
 
 export async function GET(
   _request: Request,

@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import type { TrendsResponse } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-
 // Derive sector from document tags
 const SECTOR_CASE = `
   CASE

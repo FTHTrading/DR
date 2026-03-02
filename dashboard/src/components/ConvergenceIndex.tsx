@@ -2,6 +2,7 @@
 
 import useSWR from 'swr';
 import type { ConvergenceIndex } from '@/lib/types';
+import { DEMO_CONVERGENCE } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -66,15 +67,12 @@ export function ConvergenceIndexTile({ refreshInterval = 120_000 }: { refreshInt
   if (isLoading) return (
     <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 animate-pulse h-52" />
   );
-  if (error) return (
-    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 text-dics-red text-sm">
-      Failed to load convergence index.
-    </div>
-  );
 
-  const phase  = data?.phase ?? 'Monitoring';
+  // Use demo data when API is unavailable (static export / no DB)
+  const ci     = error ? DEMO_CONVERGENCE : data;
+  const phase  = ci?.phase ?? 'Monitoring';
   const styles = PHASE_STYLES[phase];
-  const delta  = data?.delta_7d ?? 0;
+  const delta  = ci?.delta_7d ?? 0;
 
   return (
     <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 shadow-lg flex flex-col gap-4">
@@ -93,7 +91,7 @@ export function ConvergenceIndexTile({ refreshInterval = 120_000 }: { refreshInt
 
       {/* Gauge + delta */}
       <div className="flex items-center gap-6">
-        <GaugeArc value={data?.index ?? 0} />
+        <GaugeArc value={ci?.index ?? 0} />
         <div className="space-y-2">
           <div>
             <span className="text-xs text-zinc-500">7-day delta</span>
@@ -110,7 +108,7 @@ export function ConvergenceIndexTile({ refreshInterval = 120_000 }: { refreshInt
 
       {/* Sector breakdown */}
       <div className="border-t border-zinc-800 pt-3 space-y-1.5">
-        {(data?.sectors ?? []).map((s) => (
+        {(ci?.sectors ?? []).map((s) => (
           <div key={s.sector} className="flex items-center gap-2 text-xs">
             <span className="text-zinc-400 w-20 shrink-0">{s.sector}</span>
             <div className="flex-1 bg-zinc-800 rounded-full h-1.5 overflow-hidden">

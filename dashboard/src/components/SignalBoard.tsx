@@ -2,6 +2,7 @@
 
 import useSWR from 'swr';
 import type { Signal } from '@/lib/types';
+import { DEMO_SIGNALS } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -33,7 +34,9 @@ export function SignalBoard({ minScore = 0, tag = '', limit = 20, refreshInterva
   );
 
   if (isLoading) return <div className="animate-pulse text-zinc-500 p-4">Loading signals…</div>;
-  if (error)     return <div className="text-dics-red p-4">Failed to load signals.</div>;
+
+  // Use demo data when API is unavailable (static export / no DB)
+  const signals = error ? DEMO_SIGNALS.slice(0, limit) : data;
 
   return (
     <div className="overflow-x-auto">
@@ -50,7 +53,7 @@ export function SignalBoard({ minScore = 0, tag = '', limit = 20, refreshInterva
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-800">
-          {data?.map((sig) => (
+          {signals?.map((sig) => (
             <tr key={sig.id} className="hover:bg-zinc-900 transition-colors">
               <td className="py-3 pr-4">
                 <span className={`inline-block px-2 py-0.5 rounded text-xs font-bold ${scoreBadge(sig.composite_score)}`}>
@@ -86,7 +89,7 @@ export function SignalBoard({ minScore = 0, tag = '', limit = 20, refreshInterva
               </td>
             </tr>
           ))}
-          {data?.length === 0 && (
+          {signals?.length === 0 && (
             <tr>
               <td colSpan={7} className="py-8 text-center text-zinc-500">No signals found.</td>
             </tr>

@@ -13,6 +13,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import type { TrendsResponse, TrendPoint } from '@/lib/types';
+import { DEMO_TRENDS } from '@/lib/demo-data';
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -135,13 +136,15 @@ export function TrendCharts({ refreshInterval = 120_000 }: { refreshInterval?: n
   );
 
   if (isLoading) return <div className="animate-pulse text-zinc-500 p-4 h-48">Loading trend data…</div>;
-  if (error)     return <div className="text-dics-red p-4">Failed to load trends.</div>;
+
+  // Use demo data when API is unavailable (static export / no DB)
+  const trends = error ? DEMO_TRENDS : data;
 
   return (
     <div className="space-y-8">
-      <VelocityChart        data={data?.velocity      ?? []} />
-      <SectorDensityChart   data={data?.sector_density ?? []} />
-      <RiskDeltaChart       data={data?.risk_delta     ?? []} />
+      <VelocityChart        data={trends?.velocity      ?? []} />
+      <SectorDensityChart   data={trends?.sector_density ?? []} />
+      <RiskDeltaChart       data={trends?.risk_delta     ?? []} />
     </div>
   );
 }

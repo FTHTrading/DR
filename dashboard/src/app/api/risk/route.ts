@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import type { RiskRow } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
-
 export async function GET() {
   try {
     // Aggregate average 5-dim scoring from claims, grouped by sector derived from document tags
