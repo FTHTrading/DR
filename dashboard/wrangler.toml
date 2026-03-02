@@ -1,12 +1,15 @@
-# DICS — Cloudflare Pages deployment
+# DICS — Cloudflare Pages deployment via OpenNext
 # dr.optkas.org — Sovereign Infrastructure Intelligence
 
 name = "dics-dr"
+main = ".open-next/worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
-# Pages config
-pages_build_output_dir = ".vercel/output/static"
+# Assets
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 # Environment variables for production
 # DATABASE_URL is set via Cloudflare Pages dashboard (encrypted)

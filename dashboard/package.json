@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "build:cf": "npx @cloudflare/next-on-pages",
-    "preview:cf": "npx wrangler pages dev .vercel/output/static",
-    "deploy": "npx wrangler pages deploy .vercel/output/static --project-name dics-dr",
+    "build:cf": "npx opennextjs-cloudflare",
+    "preview:cf": "npx wrangler pages dev",
+    "deploy": "npx wrangler pages deploy",
     "start": "next start -p 3000",
     "lint": "next lint"
   },
@@ -22,7 +22,7 @@
     "swr": "^2.3.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.7",
+    "@opennextjs/cloudflare": "^1.0.0",
     "@types/node": "^22.0.0",
     "@types/pg": "^8.11.10",
     "@types/react": "^18.3.12",

@@ -27,9 +27,9 @@ jobs:
         working-directory: dashboard
         run: npm install --legacy-peer-deps
 
-      - name: Build with @cloudflare/next-on-pages
+      - name: Build with OpenNext for Cloudflare
         working-directory: dashboard
-        run: npx @cloudflare/next-on-pages
+        run: npx opennextjs-cloudflare
         env:
           NODE_ENV: production
 
@@ -38,4 +38,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dashboard/.vercel/output/static --project-name dics-dr
+          workingDirectory: dashboard
+          command: deploy
