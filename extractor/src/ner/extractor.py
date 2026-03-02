@@ -7,7 +7,6 @@ from __future__ import annotations
 import re
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from typing import Any
 
 import spacy
@@ -16,7 +15,7 @@ import structlog
 
 log = structlog.get_logger()
 
-SPACY_MODEL = "en_core_web_trf"
+SPACY_MODEL = "en_core_web_sm"
 
 
 @dataclass

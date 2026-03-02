@@ -6,11 +6,11 @@ import type { AuditSummary, ProofRecord } from '@/lib/types';
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 const EVENT_COLORS: Record<string, string> = {
-  'document.saved':     'text-dics-green',
-  'robots.denied':      'text-dics-red',
-  'extraction.done':    'text-dics-blue',
-  'alert.sent':         'text-gold-400',
-  'error.fetch':        'text-dics-orange',
+  'document.stored':        'text-dics-green',
+  'robots.denied':          'text-dics-red',
+  'extraction.completed':   'text-dics-blue',
+  'alert.sent':             'text-gold',
+  'error.fetch':            'text-dics-orange',
 };
 
 function eventColor(type: string) {
@@ -42,7 +42,7 @@ export function AuditPanel({ refreshInterval = 60000 }: { refreshInterval?: numb
         <ul className="space-y-1 text-xs font-mono">
           {audit?.recent_events?.slice(0, 10).map((e) => (
             <li key={e.id} className="flex gap-3 items-start">
-              <span className="text-zinc-600 shrink-0">{new Date(e.occurred_at).toLocaleTimeString()}</span>
+              <span className="text-zinc-600 shrink-0">{new Date(e.created_at).toLocaleTimeString()}</span>
               <span className={`shrink-0 w-36 ${eventColor(e.event_type)}`}>{e.event_type}</span>
               <span className="text-zinc-400 truncate">{e.entity_id}</span>
             </li>

@@ -18,11 +18,11 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 const COLORS = ['#f59e0b', '#22c55e', '#3b82f6', '#f97316', '#a855f7', '#14b8a6', '#ef4444', '#ec4899'];
 
 const DIMS: { key: keyof Omit<RiskRow, 'sector'>; label: string }[] = [
-  { key: 'political',  label: 'Political'  },
-  { key: 'regulatory', label: 'Regulatory' },
-  { key: 'esg',        label: 'ESG'        },
-  { key: 'fx',         label: 'FX'         },
-  { key: 'execution',  label: 'Execution'  },
+  { key: 'credibility', label: 'Credibility' },
+  { key: 'materiality', label: 'Materiality' },
+  { key: 'recency',     label: 'Recency'     },
+  { key: 'opportunity', label: 'Opportunity'  },
+  { key: 'risk',        label: 'Risk'         },
 ];
 
 export function RiskRadar({ refreshInterval = 60000 }: { refreshInterval?: number }) {

@@ -78,7 +78,7 @@ export function SignalBoard({ minScore = 0, tag = '', limit = 20, refreshInterva
                   className="text-dics-blue hover:underline truncate block"
                   title={sig.source_url}
                 >
-                  {new URL(sig.source_url).hostname}
+                  {(() => { try { return new URL(sig.source_url).hostname; } catch { return sig.source_url ?? '—'; } })()}
                 </a>
               </td>
               <td className="py-3 text-zinc-500 whitespace-nowrap text-xs">

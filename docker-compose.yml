@@ -56,6 +56,8 @@ services:
       FETCH_TIMEOUT_MS: "15000"
     volumes:
       - ./config:/app/config:ro
+    ports:
+      - "9091:9091"
 
   extractor:
     build:

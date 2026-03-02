@@ -44,14 +44,15 @@ class Database:
     # Reads
     # ------------------------------------------------------------------
     def fetch_unprocessed_documents(self, batch_size: int = 20) -> list[dict[str, Any]]:
+        """Fetch unprocessed docs without row locks (single-instance safe).
+        For multi-instance, use advisory locks in the main loop instead."""
         with self._tx() as cur:
             cur.execute(
                 """SELECT id, source_id, clean_text, tier
                    FROM documents
                    WHERE extracted_at IS NULL AND failed_at IS NULL
                    ORDER BY fetched_at ASC
-                   LIMIT %s
-                   FOR UPDATE SKIP LOCKED""",
+                   LIMIT %s""",
                 (batch_size,),
             )
             return [dict(r) for r in cur.fetchall()]

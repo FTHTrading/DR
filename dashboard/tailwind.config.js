@@ -9,7 +9,10 @@ module.exports = {
     extend: {
       colors: {
         // DICS domain palette
-        gold: '#D4AF37',
+        gold: {
+          DEFAULT: '#D4AF37',
+          400: '#D4AF37',
+        },
         'dics-green': '#2E7D32',
         'dics-blue': '#1565C0',
         'dics-orange': '#E65100',

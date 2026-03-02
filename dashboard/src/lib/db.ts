@@ -10,6 +10,9 @@ const isServerless =
 export function getPool(): Pool {
   if (!pool) {
     const connectionString = process.env.DATABASE_URL ?? '';
+    if (!connectionString) {
+      console.warn('[db] DATABASE_URL is not set — database queries will fail');
+    }
 
     // Use SSL when the connection string requests it or when running serverless
     const sslRequired =

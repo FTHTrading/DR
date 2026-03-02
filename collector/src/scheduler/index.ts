@@ -8,6 +8,19 @@ import { StorageService } from '../storage';
 import { logger } from '../lib/logger';
 import { inc } from '../lib/metrics';
 
+/**
+ * Convert a refresh interval in minutes to a valid 6-field cron expression.
+ * cron fields: second minute hour dayOfMonth month dayOfWeek
+ */
+function minutesToCron(minutes: number): string {
+  if (minutes <= 0) return '0 */60 * * * *';
+  if (minutes < 60) return `0 */${minutes} * * * *`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `0 0 */${hours} * * *`;
+  const days = Math.floor(hours / 24);
+  return `0 0 0 */${days} * *`;
+}
+
 export class Scheduler {
   private jobs: CronJob[] = [];
   private queue: PQueue;
@@ -30,7 +43,7 @@ export class Scheduler {
 
     for (const source of sources) {
       const intervalMinutes = source.refresh_interval_minutes ?? 60;
-      const cronExpression = `0 */${intervalMinutes} * * * *`;
+      const cronExpression = minutesToCron(intervalMinutes);
 
       const job = new CronJob(
         cronExpression,
@@ -64,7 +77,7 @@ export class Scheduler {
     try {
       const raw = await this.fetcher.fetch(source);
       if (!raw) {
-        inc('collector_robots_denied');
+        inc('collector_fetch_skipped'); // 304, robots denial, or transient error
         return;
       }
       inc('collector_fetch_ok');

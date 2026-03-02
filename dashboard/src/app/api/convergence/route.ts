@@ -21,29 +21,43 @@ function toPhase(index: number): ConvergenceIndex['phase'] {
   return 'Monitoring';
 }
 
-export async function GET() {
-  // Current 30-day window
-  const current = await query<{ sector: string; signals: string; avg_score: string }>(`
-    SELECT
-      COALESCE(metadata->>'sector', 'Unknown') AS sector,
-      COUNT(*)::text                           AS signals,
-      ROUND(AVG(composite_score)::numeric, 4)::text AS avg_score
-    FROM claims
-    WHERE created_at >= NOW() - INTERVAL '30 days'
-    GROUP BY sector
-  `);
+// Derive sector from document tags
+const SECTOR_CASE = `
+  CASE
+    WHEN 'mining'    = ANY(d.tags) OR 'rare_earth' = ANY(d.tags) OR 'geology'   = ANY(d.tags) THEN 'Mining'
+    WHEN 'energy'    = ANY(d.tags) OR 'solar'      = ANY(d.tags) OR 'bess'      = ANY(d.tags) OR 'grid'    = ANY(d.tags) THEN 'Energy'
+    WHEN 'telecom'   = ANY(d.tags) OR 'connectivity'= ANY(d.tags) OR 'cables'   = ANY(d.tags) OR 'digital' = ANY(d.tags) OR 'spectrum' = ANY(d.tags) THEN 'Telecom'
+    WHEN 'logistics' = ANY(d.tags) OR 'ports'      = ANY(d.tags) OR 'shipping'  = ANY(d.tags) THEN 'Logistics'
+    WHEN 'finance'   = ANY(d.tags) OR 'FDI'        = ANY(d.tags) OR 'macro'     = ANY(d.tags) OR 'investment' = ANY(d.tags) THEN 'Finance'
+    ELSE 'Other'
+  END`;
 
-  // Previous 30-day window for delta
-  const previous = await query<{ sector: string; signals: string }>(`
-    SELECT
-      COALESCE(metadata->>'sector', 'Unknown') AS sector,
-      COUNT(*)::text AS signals
-    FROM claims
-    WHERE
-      created_at >= NOW() - INTERVAL '60 days'
-      AND created_at <  NOW() - INTERVAL '30 days'
-    GROUP BY sector
-  `);
+export async function GET() {
+  try {
+    // Current 30-day window
+    const current = await query<{ sector: string; signals: string; avg_score: string }>(`
+      SELECT
+        ${SECTOR_CASE} AS sector,
+        COUNT(*)::text                           AS signals,
+        ROUND(AVG(c.composite_score)::numeric, 4)::text AS avg_score
+      FROM claims c
+      JOIN documents d ON d.id = c.doc_id
+      WHERE c.created_at >= NOW() - INTERVAL '30 days'
+      GROUP BY sector
+    `);
+
+    // Previous 30-day window for delta
+    const previous = await query<{ sector: string; signals: string }>(`
+      SELECT
+        ${SECTOR_CASE} AS sector,
+        COUNT(*)::text AS signals
+      FROM claims c
+      JOIN documents d ON d.id = c.doc_id
+      WHERE
+        c.created_at >= NOW() - INTERVAL '60 days'
+        AND c.created_at <  NOW() - INTERVAL '30 days'
+      GROUP BY sector
+    `);
 
   const prevMap = new Map(previous.map((r) => [r.sector, parseInt(r.signals)]));
 
@@ -91,4 +105,8 @@ export async function GET() {
   };
 
   return NextResponse.json(result);
+  } catch (err) {
+    console.error('[api/convergence] error', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

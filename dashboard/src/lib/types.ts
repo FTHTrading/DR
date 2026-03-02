@@ -35,11 +35,11 @@ export interface SourceHealth {
 
 export interface RiskRow {
   sector: string;
-  political: number;
-  regulatory: number;
-  esg: number;
-  fx: number;
-  execution: number;
+  credibility: number;
+  materiality: number;
+  recency: number;
+  opportunity: number;
+  risk: number;
 }
 
 export interface ScoreBucket {
@@ -49,8 +49,6 @@ export interface ScoreBucket {
 
 export interface ProofRecord {
   id: string;
-  document_id: string;
-  source_url: string | null;
   document_hash: string;
   chain_id: string;
   chain_tx_hash: string | null;
@@ -66,8 +64,8 @@ export interface AuditSummary {
     id: string;
     event_type: string;
     entity_id: string;
-    occurred_at: string;
-    details: string;
+    created_at: string;
+    payload: string;
   }[];
 }
 

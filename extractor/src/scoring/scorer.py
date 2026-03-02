@@ -6,8 +6,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Any
 
 from ner.extractor import Claim
 

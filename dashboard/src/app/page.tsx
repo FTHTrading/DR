@@ -26,7 +26,7 @@ export default function DashboardPage() {
           <MetricCard label="Active Signals"    value="—" trend="up"      colorClass="text-dics-green" />
           <MetricCard label="Avg Score"          value="—" unit="/ 1.0"    colorClass="text-gold-400" />
           <MetricCard label="Above Threshold"    value="—" trend="up"      colorClass="text-dics-blue" />
-          <MetricCard label="Sources Monitored"  value={18}               colorClass="text-dics-teal" />
+          <MetricCard label="Sources Monitored"  value={19}               colorClass="text-dics-teal" />
         </div>
         <ConvergenceIndexTile refreshInterval={120_000} />
       </section>
