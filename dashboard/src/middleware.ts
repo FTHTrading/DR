@@ -2,24 +2,29 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * DICS Middleware — Console Access Control
+ * DICS Middleware — Access Control
  *
  * Layer 1: Cloudflare Zero Trust (network-level, applied via Access Policy)
- * Layer 2: This middleware (application-level, cookie / header check)
+ *   - Protects /console/* and /api/* at the edge
+ *   - Injects signed JWT in `CF-Access-JWT-Assertion` header
  *
- * In production, Cloudflare Access injects a signed JWT in the
- * `CF-Access-JWT-Assertion` header. If that header is missing and
- * no `dics_session` cookie exists, we redirect to /login.
+ * Layer 2: This middleware (application-level, cookie / header check)
+ *   - Validates JWT presence before rendering
+ *   - Redirects browsers to /login if unauthenticated
+ *   - Returns 401 JSON for API requests without JWT
  *
  * The /login page itself is unprotected — Zero Trust handles the
  * OIDC/SAML flow and redirects back with the JWT.
  */
 
+const PROTECTED_PREFIXES = ['/console', '/api'];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /console/* routes
-  if (!pathname.startsWith('/console')) {
+  // Only protect /console/* and /api/* routes
+  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  if (!isProtected) {
     return NextResponse.next();
   }
 
@@ -31,12 +36,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Not authenticated — redirect to login
+  // API routes: return 401 JSON instead of redirect
+  if (pathname.startsWith('/api')) {
+    return NextResponse.json(
+      { error: 'Unauthorized', message: 'Valid authentication required' },
+      { status: 401 }
+    );
+  }
+
+  // Console routes: redirect to login
   const loginUrl = new URL('/login', request.url);
   loginUrl.searchParams.set('redirect', pathname);
   return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
-  matcher: ['/console/:path*'],
+  matcher: ['/console/:path*', '/api/:path*'],
 };

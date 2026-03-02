@@ -1,12 +1,12 @@
-import { Pool } from 'pg';
+import { Pool, neon } from '@neondatabase/serverless';
 
 let pool: Pool | null = null;
 
-// Detect serverless / Netlify environment to apply SSL and lower pool ceiling
-const isServerless =
-  process.env.NETLIFY === 'true' ||
-  process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined;
-
+/**
+ * Neon serverless Postgres driver.
+ * Uses WebSocket connections — works in Cloudflare Workers, Node.js, and Edge.
+ * Drop-in replacement for node-postgres `pg.Pool`.
+ */
 export function getPool(): Pool {
   if (!pool) {
     const connectionString = process.env.DATABASE_URL ?? '';
@@ -14,18 +14,11 @@ export function getPool(): Pool {
       console.warn('[db] DATABASE_URL is not set — database queries will fail');
     }
 
-    // Use SSL when the connection string requests it or when running serverless
-    const sslRequired =
-      connectionString.includes('sslmode=require') ||
-      connectionString.includes('sslmode=disable') === false && isServerless;
-
     pool = new Pool({
       connectionString,
-      // Serverless: keep pool tiny — each function invocation gets its own cold start
-      max:              isServerless ? 2 : 10,
+      max: 2, // Serverless: keep pool minimal
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 5_000,
-      ...(sslRequired ? { ssl: { rejectUnauthorized: false } } : {}),
     });
 
     pool.on('error', (err) => {
@@ -33,6 +26,15 @@ export function getPool(): Pool {
     });
   }
   return pool;
+}
+
+/**
+ * One-shot query via Neon's HTTP SQL endpoint.
+ * Fastest for single queries — no WebSocket handshake needed.
+ */
+export function sql() {
+  const connectionString = process.env.DATABASE_URL ?? '';
+  return neon(connectionString);
 }
 
 export async function query<T extends object>(
