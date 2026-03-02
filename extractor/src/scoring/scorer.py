@@ -1,5 +1,6 @@
 """
-Credibility, materiality, recency, opportunity, and risk scoring for extracted claims.
+Credibility, materiality, recency, opportunity, risk, and contextual scoring
+for extracted claims.  Produces sector/location normalization + capital intensity.
 """
 
 from __future__ import annotations
@@ -8,6 +9,11 @@ import re
 from dataclasses import dataclass
 
 from ner.extractor import Claim
+from scoring.normalizer import (
+    normalize_sector,
+    normalize_location,
+    compute_capital_intensity,
+)
 
 # Source tier -> base credibility
 TIER_CREDIBILITY: dict[int, float] = {
@@ -44,13 +50,17 @@ def _parse_usd(text: str | None) -> float | None:
 @dataclass
 class ScoredClaim:
     claim: Claim
-    credibility: float      # 0–1
-    materiality: float      # 0–1
-    recency: float          # 0–1 (1 = very fresh)
-    opportunity: float      # 0–1
-    risk: float             # 0–1 (higher = riskier)
-    composite: float        # weighted aggregate
+    credibility: float           # 0–1
+    materiality: float           # 0–1
+    recency: float               # 0–1 (1 = very fresh)
+    opportunity: float           # 0–1
+    risk: float                  # 0–1 (higher = riskier)
+    composite: float             # weighted aggregate
     usd_amount: float | None
+    # ── contextual scoring (new) ──
+    sector_normalized: str       # deterministic sector
+    location_normalized: str     # deterministic location
+    capital_intensity: float     # modifier 0.5–1.3
 
 
 class Scorer:
@@ -63,12 +73,22 @@ class Scorer:
         opportunity = self._opportunity(claim)
         risk = self._risk(claim)
 
+        # ── contextual dimensions ──
+        full_text = f"{claim.statement or ''} {claim.excerpt or ''}"
+        sector = normalize_sector(full_text)
+        location = normalize_location(full_text)
+        capital_int = compute_capital_intensity(full_text)
+
+        # Weighted composite: original 5 dims + 3 contextual
         composite = (
-            0.30 * credibility
-            + 0.25 * materiality
+            0.25 * credibility
+            + 0.20 * materiality
             + 0.15 * recency
             + 0.20 * opportunity
             - 0.10 * risk
+            + 0.10 * capital_int
+            + 0.10 * self._sector_weight(sector)
+            + 0.10 * self._location_weight(location)
         )
         composite = max(0.0, min(1.0, composite))
 
@@ -81,6 +101,9 @@ class Scorer:
             risk=risk,
             composite=composite,
             usd_amount=usd,
+            sector_normalized=sector,
+            location_normalized=location,
+            capital_intensity=capital_int,
         )
 
     def _materiality(self, claim: Claim, usd: float | None) -> float:
@@ -112,3 +135,28 @@ class Scorer:
             if kw in text:
                 score += 0.1
         return min(1.0, score)
+
+    @staticmethod
+    def _sector_weight(sector: str) -> float:
+        """Strategic sector relevance — higher for sectors closest to owned assets."""
+        return {
+            "energy": 0.9,
+            "tourism": 0.8,
+            "finance": 0.7,
+            "logistics": 0.6,
+            "telecom": 0.5,
+            "mining": 0.5,
+            "macro": 0.4,
+        }.get(sector, 0.4)
+
+    @staticmethod
+    def _location_weight(location: str) -> float:
+        """Location relevance — higher for locations near owned assets."""
+        return {
+            "bani": 0.9,
+            "cabrera": 0.9,
+            "santo_domingo": 0.6,
+            "pedernales": 0.5,
+            "samana": 0.6,
+            "national": 0.4,
+        }.get(location, 0.4)

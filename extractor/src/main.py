@@ -50,6 +50,12 @@ def run_once(db: Database, extractor: EntityExtractor, scorer: Scorer, embedder:
             log.exception("extraction_failed", doc_id=doc["id"])
             db.mark_document_failed(doc["id"])
 
+    # Recompute asset impact after each batch
+    try:
+        db.compute_asset_impact()
+    except Exception:
+        log.exception("asset_impact_computation_failed")
+
     return len(rows)
 
 

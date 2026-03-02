@@ -183,3 +183,39 @@ export interface ProjectDetail {
   funding_pathways: FundingPathway[];
   counterparties: Counterparty[];
 }
+
+// ── Daily Intelligence Brief ──────────────────────────────────────────────────
+
+export interface SectorMomentum {
+  sector: string;
+  signals: number;
+  avg_score: number;
+  trend: 'rising' | 'stable' | 'falling';
+  delta_pct: number;
+}
+
+export interface AssetBrief {
+  project_id: string;
+  project_name: string;
+  total_signals: number;
+  avg_impact: number;
+  risk_delta: number;
+  opportunity_delta: number;
+  top_signals: string[];
+  narrative: string;
+}
+
+export interface DailyBriefData {
+  date: string;
+  convergence_phase: 'Monitoring' | 'Building' | 'Accelerating' | 'Critical';
+  convergence_index: number;
+  risk_level: string;
+  capital_window: string;
+  sector_momentum: SectorMomentum[];
+  asset_impacts: AssetBrief[];
+  executive_summary: string;
+  risk_narrative: string;
+  capital_narrative: string;
+  claims_24h: number;
+  docs_24h: number;
+}

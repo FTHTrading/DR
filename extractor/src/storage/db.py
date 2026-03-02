@@ -98,8 +98,9 @@ class Database:
                     """INSERT INTO claims
                          (id, doc_id, statement, quantity, unit, who, what, where_text,
                           when_text, excerpt, credibility, materiality, recency,
-                          opportunity, risk, composite_score, usd_amount, embedding)
-                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                          opportunity, risk, composite_score, usd_amount, embedding,
+                          sector_normalized, location_normalized, capital_intensity)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                        ON CONFLICT DO NOTHING""",
                     (
                         c.id, doc_id, c.statement, c.quantity, c.unit,
@@ -107,6 +108,7 @@ class Database:
                         sc.credibility, sc.materiality, sc.recency,
                         sc.opportunity, sc.risk, sc.composite, sc.usd_amount,
                         emb,
+                        sc.sector_normalized, sc.location_normalized, sc.capital_intensity,
                     ),
                 )
 
@@ -132,3 +134,12 @@ class Database:
             cur.execute(
                 "UPDATE documents SET failed_at = NOW() WHERE id = %s", (doc_id,)
             )
+
+    def compute_asset_impact(self) -> int:
+        """Recompute asset_impact for all claims with sector_normalized set."""
+        with self._tx() as cur:
+            cur.execute("SELECT compute_asset_impact()")
+            result = cur.fetchone()
+            count = list(result.values())[0] if result else 0
+            log.info("asset_impact_computed", rows=count)
+            return count
