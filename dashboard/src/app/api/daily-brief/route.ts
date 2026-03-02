@@ -15,7 +15,7 @@ export async function GET() {
         (SELECT count(*) FROM documents
            WHERE fetched_at > now() - interval '24 hours')::int AS docs_24h,
         (SELECT count(*) FROM claims
-           WHERE scored_at > now() - interval '24 hours')::int AS claims_24h
+           WHERE created_at > now() - interval '24 hours')::int AS claims_24h
     `);
 
     // ── 2. Sector momentum (7-day, with delta vs prior 7 days) ──────────
@@ -31,7 +31,7 @@ export async function GET() {
           count(*)::int AS signals,
           avg(composite_score)::real AS avg_score
         FROM claims
-        WHERE scored_at > now() - interval '7 days'
+        WHERE created_at > now() - interval '7 days'
         GROUP BY 1
       ),
       previous AS (
@@ -39,8 +39,8 @@ export async function GET() {
           COALESCE(sector_normalized, 'macro') AS sector,
           count(*)::int AS signals
         FROM claims
-        WHERE scored_at > now() - interval '14 days'
-          AND scored_at <= now() - interval '7 days'
+        WHERE created_at > now() - interval '14 days'
+          AND created_at <= now() - interval '7 days'
         GROUP BY 1
       )
       SELECT
@@ -80,8 +80,8 @@ export async function GET() {
         p.name AS project_name,
         COALESCE(s.total_signals, 0)::int AS total_signals,
         COALESCE(s.avg_impact, 0)::real   AS avg_impact,
-        COALESCE(s.risk_7d, 0)::real      AS risk_delta,
-        COALESCE(s.opportunity_7d, 0)::real AS opportunity_delta
+        COALESCE(s.avg_risk_7d, 0)::real      AS risk_delta,
+        COALESCE(s.avg_opp_7d, 0)::real AS opportunity_delta
       FROM projects p
       LEFT JOIN asset_impact_summary s ON s.project_id = p.id
       ORDER BY p.name
@@ -124,7 +124,7 @@ export async function GET() {
         COALESCE(avg(composite_score) * 100, 0)::real AS conv_index,
         COALESCE(avg(risk), 0)::real AS avg_risk
       FROM claims
-      WHERE scored_at > now() - interval '30 days'
+      WHERE created_at > now() - interval '30 days'
     `);
 
     // ── 5. Assemble brief ────────────────────────────────────────────────

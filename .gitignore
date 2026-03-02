@@ -5,9 +5,11 @@ node_modules/
 
 # Build outputs
 .next/
+.open-next/
 dist/
 build/
 out/
+output/
 
 # Environment files — NEVER commit secrets
 .env
@@ -46,3 +48,4 @@ Thumbs.db
 
 # Misc
 *.tsbuildinfo
+.wrangler/

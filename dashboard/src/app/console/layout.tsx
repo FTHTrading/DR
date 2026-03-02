@@ -1,5 +1,6 @@
 const NAV = [
   { href: '/console/brief', label: 'Brief', icon: '📋' },
+  { href: '/console/reports', label: 'Reports', icon: '📰' },
   { href: '#signals', label: 'Signals', icon: '⚡' },
   { href: '#trends',  label: 'Trends',  icon: '📈' },
   { href: '#risk',    label: 'Risk',    icon: '🎯' },
