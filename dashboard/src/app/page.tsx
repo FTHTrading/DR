@@ -2,363 +2,544 @@
 
 import { useState } from 'react';
 
-/* ─── Translation dictionary ────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   Translation dictionary — EN / ES
+   ═══════════════════════════════════════════════════════════════ */
 const t = {
   en: {
-    langToggle: 'Español',
-    heroTag: 'Dominican Republic Infrastructure Intelligence',
-    heroTitle: 'See What\'s Really Happening — Before Everyone Else',
-    heroSub:
-      'DICS watches 19 official and open sources across the Dominican Republic 24/7. It reads government filings, trade reports, port data, energy updates, and telecom announcements — then turns them into scored, verified intelligence signals you can act on.',
-    ctaDashboard: 'Open Live Dashboard',
-    ctaGitHub: 'View on GitHub',
+    lang: 'en',
+    toggle: 'Español',
+    nav: { console: 'Intelligence Console', github: 'GitHub' },
 
-    // What it does
-    whatTitle: 'What Does It Actually Do?',
-    whatSub:
-      'Think of it as a radar system for Dominican Republic infrastructure. Instead of tracking planes, it tracks information.',
-    whatSteps: [
+    /* ── Hero ─────────────────────────────────────────────── */
+    heroKicker: 'Infrastructure Intelligence · Dominican Republic',
+    heroTitle: 'Three sectors are converging.\nMost people won\'t see it until it\'s obvious.',
+    heroBody:
+      'In the last 90 days, the Dominican Republic announced 150\u00A0M+ tons of rare earth deposits, received a $500\u00A0M Google digital-exchange commitment, and activated an Amazon logistics hub. These are not isolated headlines. They are convergence signals — and DICS was built to detect them.',
+    heroCta: 'Open Intelligence Console',
+    heroCtaSec: 'Read the Thesis',
+
+    /* ── Situation banner ─────────────────────────────────── */
+    sitTitle: 'Current Situation',
+    sitDate: 'As of March 2026',
+
+    /* ── 3 Signals ────────────────────────────────────────── */
+    signals: [
       {
-        icon: '📡',
-        title: 'Collects',
-        body: 'Every 15 minutes, it pulls the latest publications from 19 sources — government portals, trade bodies, news feeds, and open-data registries. It respects every website\'s rules and never scrapes anything it shouldn\'t.',
+        color: 'gold',
+        tag: 'Mineral Discovery',
+        date: 'Feb 27, 2026 · Reuters',
+        title: '150+ Million Tons of Rare Earth Deposits Identified',
+        body: 'President Abinader confirmed preliminary geological studies showing gross deposits exceeding 150\u00A0million tons of rare earth elements across 17\u00A0critical metals — used in semiconductors, aerospace, military systems, and advanced energy. Located in Pedernales province. Reserve certification expected by early 2027.',
+        score: '0.82',
+        factors: 'Credibility: Official · Materiality: Very High · Status: Pre-certification',
       },
       {
-        icon: '🧠',
-        title: 'Reads & Understands',
-        body: 'An AI reads each document, pulls out the important facts — who\'s involved, what sector it\'s about, what money is mentioned — and scores how important and trustworthy it is.',
+        color: 'blue',
+        tag: 'Digital Infrastructure',
+        date: 'Feb 23, 2026 · DataCenterDynamics',
+        title: 'Google Invests $500M in Digital Exchange Hub',
+        body: 'Google will build a 7,000\u00A0m² international digital exchange hub with new submarine cable connections direct to South Carolina and Virginia. This triples direct US cable routes, increases fiber pairs 10×, and positions DR as a regional data-transit node between North America, Central America, and the Caribbean. Declared high national priority via Decree\u00A0113-26. Construction starts March\u00A02026.',
+        score: '0.88',
+        factors: 'Credibility: Hyperscaler-confirmed · Materiality: $500M capex · Status: Under construction',
       },
       {
-        icon: '📊',
-        title: 'Scores & Ranks',
-        body: 'Every piece of information gets a composite score from 0 to 1 based on five factors: credibility, materiality, recency, opportunity, and risk. The best signals float to the top.',
-      },
-      {
-        icon: '🔒',
-        title: 'Proves Everything',
-        body: 'Every document gets a unique fingerprint (SHA-256 hash). Nothing is edited or deleted — ever. There\'s a full audit trail so you can prove exactly where each piece of intelligence came from.',
+        color: 'orange',
+        tag: 'Logistics Activation',
+        date: 'Sep 2025 · Amazon',
+        title: 'Amazon Regional Logistics Hub Activated',
+        body: 'Amazon launched a regional logistics hub near Las Américas International Airport in Santo Domingo. Direct cargo flights, AmazonGlobal shipping, and DHL integration now operational. This accelerates physical goods routing alongside the digital backbone expansion — a dual-layer infrastructure convergence.',
+        score: '0.71',
+        factors: 'Credibility: Corporate · Materiality: High · Status: Operational',
       },
     ],
 
-    // Sectors
-    sectorsTitle: 'Five Sectors. One Dashboard.',
-    sectorsSub: 'DICS covers the infrastructure pillars that drive the Dominican Republic forward.',
+    /* ── Convergence thesis ───────────────────────────────── */
+    convTitle: 'The Convergence Thesis',
+    convBody:
+      'When a country simultaneously develops strategic mineral extraction, digital backbone infrastructure, and logistics acceleration — that is not coincidence. That is infrastructure convergence. Mining requires power, logistics, connectivity, export routes, and financing. Google builds the digital layer. Amazon builds the physical layer. Government signals the resource layer. Very few small nations pull this off. Singapore did. Ireland did. The UAE did. The Dominican Republic is attempting something structurally similar.',
+    convLabel1: 'Strategic Minerals',
+    convLabel2: 'Digital Backbone',
+    convLabel3: 'Logistics Routing',
+    convCenter: 'Convergence',
+
+    /* ── What DICS does ───────────────────────────────────── */
+    whatTitle: 'What DICS Does',
+    whatBody: 'DICS is an automated infrastructure intelligence system. It monitors 19 government, trade, and open-data sources across the Dominican Republic around the clock — then extracts, scores, and verifies every signal so you don\'t have to.',
+    pipeline: [
+      {
+        step: '01',
+        title: 'Collect',
+        body: 'Every 15 minutes, the collector pulls the latest publications from government portals, trade bodies, regulatory filings, and open-data registries. It respects every site\'s policies. Every document gets a SHA-256 fingerprint on arrival.',
+      },
+      {
+        step: '02',
+        title: 'Extract',
+        body: 'An NLP pipeline reads each document, identifies entities (people, organizations, monetary values, locations), and tags the relevant sector. No manual classification — the system reads and categorizes autonomously.',
+      },
+      {
+        step: '03',
+        title: 'Score',
+        body: 'Each extracted claim receives a composite score from 0\u00A0to\u00A01 based on five dimensions: credibility, materiality, recency, opportunity, and risk. High-scoring signals surface automatically.',
+      },
+      {
+        step: '04',
+        title: 'Prove',
+        body: 'Every document, score, and extraction is logged in an append-only audit trail. Nothing is edited or deleted. Every claim links back to its original source. The entire chain is cryptographically verifiable.',
+      },
+    ],
+
+    /* ── Sectors ──────────────────────────────────────────── */
+    sectorsTitle: 'Sectors Under Watch',
     sectors: [
-      { icon: '⛏️', name: 'Mining & Rare Earths', body: 'Permits, geological surveys, export volumes, company filings' },
-      { icon: '⚡', name: 'Energy & Renewables', body: 'Solar projects, grid capacity, battery storage, utility reports' },
-      { icon: '📡', name: 'Telecom & Connectivity', body: 'Spectrum auctions, submarine cables, 5G rollout, broadband data' },
-      { icon: '🚢', name: 'Logistics & Ports', body: 'Shipping manifests, port throughput, customs data, trade routes' },
-      { icon: '💰', name: 'Finance & Investment', body: 'FDI flows, bond issuances, central bank bulletins, GDP data' },
+      { icon: '⛏️', name: 'Mining & Rare Earths', body: 'Permits, geological surveys, export volumes, company filings, reserve certifications' },
+      { icon: '⚡', name: 'Energy & Renewables', body: 'Solar projects, grid capacity, battery storage, utility reports, power policy' },
+      { icon: '📡', name: 'Telecom & Connectivity', body: 'Submarine cables, spectrum auctions, 5G deployment, broadband expansion, IXPs' },
+      { icon: '🚢', name: 'Logistics & Ports', body: 'Port throughput, cargo flights, customs modernization, trade route shifts' },
+      { icon: '💰', name: 'Finance & Investment', body: 'FDI flows, bond issuances, central bank data, fiscal policy, capital formation' },
     ],
 
-    // How it's built
-    builtTitle: 'How It\'s Built',
-    builtSub: 'Enterprise-grade open-source stack. No vendor lock-in. Data stays yours.',
-    builtParts: [
-      { label: 'Collector', tech: 'Node.js + TypeScript', desc: 'Schedules fetches, deduplicates documents, respects robots.txt' },
-      { label: 'Extractor', tech: 'Python + spaCy + AI', desc: 'Reads text, pulls entities, scores claims, generates embeddings' },
-      { label: 'Database', tech: 'PostgreSQL + pgvector', desc: 'Stores everything — documents, entities, scores, vectors, audit logs' },
-      { label: 'Dashboard', tech: 'Next.js + Tailwind', desc: 'Live charts, risk radar, signal board, source health — all real-time' },
-      { label: 'Alerts', tech: 'Cloudflare Workers', desc: 'Webhook notifications when high-priority signals land' },
+    /* ── Architecture ─────────────────────────────────────── */
+    archTitle: 'System Architecture',
+    archBody: 'Enterprise-grade open-source stack. No vendor lock-in. Full data sovereignty.',
+    archParts: [
+      { label: 'Collector', tech: 'Node.js · TypeScript · p-queue', desc: 'Scheduled fetching, deduplication, robots.txt compliance, rate limiting' },
+      { label: 'Extractor', tech: 'Python · spaCy · Transformers', desc: 'NLP entity extraction, claim generation, embedding computation' },
+      { label: 'Database', tech: 'PostgreSQL 16 · pgvector', desc: 'Relational storage, vector similarity search, append-only audit log' },
+      { label: 'Dashboard', tech: 'Next.js 14 · Tailwind · Recharts', desc: 'Real-time intelligence console with risk radar, trends, signal board' },
+      { label: 'Alerts', tech: 'Cloudflare Workers', desc: 'Webhook-based notifications when high-priority signals surface' },
     ],
 
-    // Numbers
-    statsTitle: 'By the Numbers',
+    /* ── Stats ────────────────────────────────────────────── */
     stats: [
-      { value: '19', label: 'Sources monitored' },
-      { value: '5', label: 'Sectors covered' },
-      { value: '24/7', label: 'Continuous monitoring' },
-      { value: '100%', label: 'Auditable trail' },
+      { value: '19', label: 'Sources Monitored' },
+      { value: '5', label: 'Sectors Covered' },
+      { value: '24/7', label: 'Continuous Collection' },
+      { value: '100%', label: 'Auditable Trail' },
     ],
 
-    // Footer
-    footerBuilt: 'Built by',
-    footerCompany: 'FTH Trading',
-    footerOpen: 'Open-source under MIT license.',
-    footerTagline: 'Intelligence infrastructure for the Dominican Republic.',
+    /* ── CTA ──────────────────────────────────────────────── */
+    ctaTitle: 'The signals are already moving.',
+    ctaBody: 'DICS surfaces what matters before consensus forms. Access the live intelligence console or explore the open-source architecture.',
+    ctaConsole: 'Open Console',
+    ctaRepo: 'View Repository',
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footerBy: 'Built by',
+    footerCo: 'FTH Trading',
+    footerLicense: 'Open-source · MIT License',
+    footerTag: 'Infrastructure intelligence for the Dominican Republic.',
   },
 
   es: {
-    langToggle: 'English',
-    heroTag: 'Inteligencia de Infraestructura de República Dominicana',
-    heroTitle: 'Vea Lo Que Realmente Está Pasando — Antes Que Todos',
-    heroSub:
-      'DICS monitorea 19 fuentes oficiales y abiertas en República Dominicana las 24 horas. Lee documentos gubernamentales, reportes comerciales, datos portuarios, actualizaciones energéticas y anuncios de telecomunicaciones — luego los convierte en señales de inteligencia verificadas y puntuadas para tomar decisiones.',
-    ctaDashboard: 'Abrir Panel en Vivo',
-    ctaGitHub: 'Ver en GitHub',
+    lang: 'es',
+    toggle: 'English',
+    nav: { console: 'Consola de Inteligencia', github: 'GitHub' },
 
-    whatTitle: '¿Qué Hace Exactamente?',
-    whatSub:
-      'Piense en DICS como un sistema de radar para la infraestructura dominicana. En vez de rastrear aviones, rastrea información.',
-    whatSteps: [
+    heroKicker: 'Inteligencia de Infraestructura · República Dominicana',
+    heroTitle: 'Tres sectores están convergiendo.\nLa mayoría no lo verá hasta que sea obvio.',
+    heroBody:
+      'En los últimos 90 días, la República Dominicana anunció más de 150\u00A0millones de toneladas de depósitos de tierras raras, recibió un compromiso de Google por $500\u00A0M para un centro de intercambio digital, y activó un centro logístico de Amazon. No son titulares aislados. Son señales de convergencia — y DICS fue construido para detectarlas.',
+    heroCta: 'Abrir Consola de Inteligencia',
+    heroCtaSec: 'Leer la Tesis',
+
+    sitTitle: 'Situación Actual',
+    sitDate: 'A marzo 2026',
+
+    signals: [
       {
-        icon: '📡',
-        title: 'Recolecta',
-        body: 'Cada 15 minutos, descarga las últimas publicaciones de 19 fuentes — portales gubernamentales, organismos comerciales, noticias y registros de datos abiertos. Respeta las reglas de cada sitio web.',
+        color: 'gold',
+        tag: 'Descubrimiento Mineral',
+        date: '27 feb 2026 · Reuters',
+        title: 'Identificados 150+ Millones de Toneladas de Tierras Raras',
+        body: 'El Presidente Abinader confirmó estudios geológicos preliminares que muestran depósitos brutos superiores a 150\u00A0millones de toneladas de elementos de tierras raras — 17\u00A0metales críticos usados en semiconductores, aeroespacial, sistemas militares y energía avanzada. Ubicados en la provincia de Pedernales. Certificación de reservas prevista para inicios de 2027.',
+        score: '0.82',
+        factors: 'Credibilidad: Oficial · Materialidad: Muy Alta · Estado: Pre-certificación',
       },
       {
-        icon: '🧠',
-        title: 'Lee y Entiende',
-        body: 'Una inteligencia artificial lee cada documento, extrae los hechos importantes — quién está involucrado, qué sector, qué dinero se menciona — y califica qué tan importante y confiable es.',
+        color: 'blue',
+        tag: 'Infraestructura Digital',
+        date: '23 feb 2026 · DataCenterDynamics',
+        title: 'Google Invierte $500M en Centro de Intercambio Digital',
+        body: 'Google construirá un centro de intercambio digital internacional de 7.000\u00A0m² con nuevas conexiones de cable submarino directo a Carolina del Sur y Virginia. Esto triplica las rutas de cable directas a EE.UU., aumenta los pares de fibra 10×, y posiciona a RD como nodo regional de tránsito de datos. Declarado de alta prioridad nacional mediante Decreto\u00A0113-26. Construcción inicia marzo\u00A02026.',
+        score: '0.88',
+        factors: 'Credibilidad: Confirmado por hyperscaler · Materialidad: $500M capex · Estado: En construcción',
       },
       {
-        icon: '📊',
-        title: 'Puntúa y Clasifica',
-        body: 'Cada pieza de información recibe un puntaje compuesto de 0 a 1 basado en cinco factores: credibilidad, materialidad, actualidad, oportunidad y riesgo. Las mejores señales aparecen primero.',
-      },
-      {
-        icon: '🔒',
-        title: 'Lo Demuestra Todo',
-        body: 'Cada documento recibe una huella digital única (hash SHA-256). Nada se edita ni se borra — nunca. Hay un registro de auditoría completo para que pueda probar exactamente de dónde vino cada dato.',
+        color: 'orange',
+        tag: 'Activación Logística',
+        date: 'Sep 2025 · Amazon',
+        title: 'Centro Logístico Regional de Amazon Activado',
+        body: 'Amazon lanzó un centro logístico regional cerca del Aeropuerto Internacional Las Américas en Santo Domingo. Vuelos de carga directos, envío AmazonGlobal e integración con DHL ahora operativos. Esto acelera el enrutamiento físico de bienes junto con la expansión de la infraestructura digital — una convergencia de doble capa.',
+        score: '0.71',
+        factors: 'Credibilidad: Corporativa · Materialidad: Alta · Estado: Operativo',
       },
     ],
 
-    sectorsTitle: 'Cinco Sectores. Un Solo Panel.',
-    sectorsSub: 'DICS cubre los pilares de infraestructura que impulsan a República Dominicana.',
+    convTitle: 'La Tesis de Convergencia',
+    convBody:
+      'Cuando un país desarrolla simultáneamente extracción de minerales estratégicos, infraestructura digital troncal y aceleración logística — eso no es coincidencia. Es convergencia de infraestructura. La minería requiere energía, logística, conectividad, rutas de exportación y financiamiento. Google construye la capa digital. Amazon construye la capa física. El gobierno señala la capa de recursos. Muy pocas naciones pequeñas logran esto. Singapur lo hizo. Irlanda lo hizo. Los EAU lo hicieron. La República Dominicana está intentando algo estructuralmente similar.',
+    convLabel1: 'Minerales Estratégicos',
+    convLabel2: 'Infraestructura Digital',
+    convLabel3: 'Enrutamiento Logístico',
+    convCenter: 'Convergencia',
+
+    whatTitle: 'Qué Hace DICS',
+    whatBody: 'DICS es un sistema automatizado de inteligencia de infraestructura. Monitorea 19 fuentes gubernamentales, comerciales y de datos abiertos de la República Dominicana las 24 horas — luego extrae, puntúa y verifica cada señal para que usted no tenga que hacerlo.',
+    pipeline: [
+      {
+        step: '01',
+        title: 'Recolectar',
+        body: 'Cada 15 minutos, el recolector descarga las últimas publicaciones de portales gubernamentales, organismos comerciales, registros regulatorios y datos abiertos. Respeta las políticas de cada sitio. Cada documento recibe una huella SHA-256 al llegar.',
+      },
+      {
+        step: '02',
+        title: 'Extraer',
+        body: 'Un pipeline de procesamiento de lenguaje natural lee cada documento, identifica entidades (personas, organizaciones, valores monetarios, ubicaciones) y etiqueta el sector relevante. Sin clasificación manual — el sistema lee y categoriza de forma autónoma.',
+      },
+      {
+        step: '03',
+        title: 'Puntuar',
+        body: 'Cada reclamo extraído recibe un puntaje compuesto de 0\u00A0a\u00A01 basado en cinco dimensiones: credibilidad, materialidad, actualidad, oportunidad y riesgo. Las señales de alto puntaje se destacan automáticamente.',
+      },
+      {
+        step: '04',
+        title: 'Demostrar',
+        body: 'Cada documento, puntaje y extracción se registra en un log de auditoría que solo permite agregar. Nada se edita ni se elimina. Cada reclamo se vincula a su fuente original. La cadena completa es verificable criptográficamente.',
+      },
+    ],
+
+    sectorsTitle: 'Sectores Bajo Vigilancia',
     sectors: [
-      { icon: '⛏️', name: 'Minería y Tierras Raras', body: 'Permisos, estudios geológicos, volúmenes de exportación, registros de empresas' },
-      { icon: '⚡', name: 'Energía y Renovables', body: 'Proyectos solares, capacidad de red, almacenamiento de baterías, reportes de servicios' },
-      { icon: '📡', name: 'Telecomunicaciones', body: 'Subastas de espectro, cables submarinos, despliegue 5G, datos de banda ancha' },
-      { icon: '🚢', name: 'Logística y Puertos', body: 'Manifiestos de envío, rendimiento portuario, datos aduaneros, rutas comerciales' },
-      { icon: '💰', name: 'Finanzas e Inversión', body: 'Flujos de IED, emisiones de bonos, boletines del banco central, datos del PIB' },
+      { icon: '⛏️', name: 'Minería y Tierras Raras', body: 'Permisos, estudios geológicos, volúmenes de exportación, registros empresariales, certificaciones de reservas' },
+      { icon: '⚡', name: 'Energía y Renovables', body: 'Proyectos solares, capacidad de red, almacenamiento de baterías, reportes de servicios, política energética' },
+      { icon: '📡', name: 'Telecomunicaciones', body: 'Cables submarinos, subastas de espectro, despliegue 5G, expansión de banda ancha, IXPs' },
+      { icon: '🚢', name: 'Logística y Puertos', body: 'Rendimiento portuario, vuelos de carga, modernización aduanera, cambios en rutas comerciales' },
+      { icon: '💰', name: 'Finanzas e Inversión', body: 'Flujos de IED, emisiones de bonos, datos del banco central, política fiscal, formación de capital' },
     ],
 
-    builtTitle: 'Cómo Está Construido',
-    builtSub: 'Tecnología empresarial de código abierto. Sin dependencia de proveedores. Los datos son suyos.',
-    builtParts: [
-      { label: 'Recolector', tech: 'Node.js + TypeScript', desc: 'Programa búsquedas, deduplica documentos, respeta robots.txt' },
-      { label: 'Extractor', tech: 'Python + spaCy + IA', desc: 'Lee texto, extrae entidades, puntúa reclamos, genera embeddings' },
-      { label: 'Base de Datos', tech: 'PostgreSQL + pgvector', desc: 'Almacena todo — documentos, entidades, puntajes, vectores, auditoría' },
-      { label: 'Panel', tech: 'Next.js + Tailwind', desc: 'Gráficos en vivo, radar de riesgo, señales, salud de fuentes — todo en tiempo real' },
-      { label: 'Alertas', tech: 'Cloudflare Workers', desc: 'Notificaciones webhook cuando llegan señales de alta prioridad' },
+    archTitle: 'Arquitectura del Sistema',
+    archBody: 'Stack empresarial de código abierto. Sin dependencia de proveedores. Soberanía total de datos.',
+    archParts: [
+      { label: 'Recolector', tech: 'Node.js · TypeScript · p-queue', desc: 'Búsqueda programada, deduplicación, cumplimiento de robots.txt, límites de velocidad' },
+      { label: 'Extractor', tech: 'Python · spaCy · Transformers', desc: 'Extracción de entidades NLP, generación de reclamos, cálculo de embeddings' },
+      { label: 'Base de Datos', tech: 'PostgreSQL 16 · pgvector', desc: 'Almacenamiento relacional, búsqueda por similitud vectorial, log de auditoría' },
+      { label: 'Panel', tech: 'Next.js 14 · Tailwind · Recharts', desc: 'Consola de inteligencia en tiempo real con radar de riesgo, tendencias, tablero de señales' },
+      { label: 'Alertas', tech: 'Cloudflare Workers', desc: 'Notificaciones webhook cuando surgen señales de alta prioridad' },
     ],
 
-    statsTitle: 'En Números',
     stats: [
-      { value: '19', label: 'Fuentes monitoreadas' },
-      { value: '5', label: 'Sectores cubiertos' },
-      { value: '24/7', label: 'Monitoreo continuo' },
-      { value: '100%', label: 'Rastro auditable' },
+      { value: '19', label: 'Fuentes Monitoreadas' },
+      { value: '5', label: 'Sectores Cubiertos' },
+      { value: '24/7', label: 'Recolección Continua' },
+      { value: '100%', label: 'Rastro Auditable' },
     ],
 
-    footerBuilt: 'Desarrollado por',
-    footerCompany: 'FTH Trading',
-    footerOpen: 'Código abierto bajo licencia MIT.',
-    footerTagline: 'Infraestructura de inteligencia para República Dominicana.',
+    ctaTitle: 'Las señales ya se están moviendo.',
+    ctaBody: 'DICS identifica lo que importa antes de que se forme el consenso. Acceda a la consola de inteligencia en vivo o explore la arquitectura de código abierto.',
+    ctaConsole: 'Abrir Consola',
+    ctaRepo: 'Ver Repositorio',
+
+    footerBy: 'Desarrollado por',
+    footerCo: 'FTH Trading',
+    footerLicense: 'Código abierto · Licencia MIT',
+    footerTag: 'Infraestructura de inteligencia para República Dominicana.',
   },
 } as const;
 
 type Lang = keyof typeof t;
 
-/* ─── Page component ─────────────────────────────────────────── */
+const SIGNAL_BORDER: Record<string, string> = {
+  gold: 'border-l-[#D4AF37]',
+  blue: 'border-l-[#1565C0]',
+  orange: 'border-l-[#E65100]',
+};
+const SIGNAL_DOT: Record<string, string> = {
+  gold: 'bg-[#D4AF37]',
+  blue: 'bg-[#1565C0]',
+  orange: 'bg-[#E65100]',
+};
+const SIGNAL_TAG_BG: Record<string, string> = {
+  gold: 'bg-[#D4AF37]/10 text-[#D4AF37]',
+  blue: 'bg-[#1565C0]/10 text-[#60A5FA]',
+  orange: 'bg-[#E65100]/10 text-[#FB923C]',
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   Component
+   ═══════════════════════════════════════════════════════════════ */
 
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>('en');
   const d = t[lang];
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* ── Top bar ──────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-black/70 border-b border-zinc-800">
+    <div className="min-h-screen bg-black text-zinc-300 antialiased">
+
+      {/* ── Nav ───────────────────────────────────────────────── */}
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-black/80 border-b border-zinc-800/60">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3">
-          <div className="flex items-center gap-2">
-            <span className="text-gold font-extrabold text-xl tracking-tight">DICS</span>
-            <span className="hidden sm:inline text-xs text-zinc-500 border-l border-zinc-700 pl-2 ml-1">
-              Intelligence Command
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
+          <span className="text-gold font-extrabold text-lg tracking-tight">DICS</span>
+          <div className="flex items-center gap-3 text-xs">
             <button
               onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-              className="px-3 py-1.5 rounded-lg border border-zinc-700 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+              className="px-3 py-1.5 rounded border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors font-medium"
             >
-              🌐 {d.langToggle}
+              {d.toggle}
             </button>
             <a
-              href="/dashboard"
-              className="px-4 py-1.5 rounded-lg bg-gold text-black text-xs font-bold hover:bg-yellow-500 transition-colors"
+              href="https://github.com/FTHTrading/DR"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline px-3 py-1.5 text-zinc-500 hover:text-zinc-300 transition-colors"
             >
-              {d.ctaDashboard}
+              {d.nav.github}
+            </a>
+            <a
+              href="/dashboard"
+              className="px-4 py-1.5 rounded bg-gold text-black font-bold hover:bg-yellow-500 transition-colors"
+            >
+              {d.nav.console}
             </a>
           </div>
         </div>
       </nav>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gold/5 rounded-full blur-[120px]" />
+          <div className="absolute top-[-30%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gold/[0.03] rounded-full blur-[140px]" />
         </div>
 
-        <div className="relative max-w-4xl mx-auto text-center px-6 pt-24 pb-20">
-          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-4 font-semibold">
-            {d.heroTag}
+        <div className="relative max-w-4xl mx-auto px-6 pt-28 pb-20 text-center">
+          <p className="text-[11px] uppercase tracking-[0.3em] text-zinc-500 mb-6 font-medium">
+            {d.heroKicker}
           </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-white leading-snug whitespace-pre-line mb-8">
             {d.heroTitle}
           </h1>
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-10">
-            {d.heroSub}
+          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-12">
+            {d.heroBody}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="/dashboard"
-              className="px-8 py-3 rounded-xl bg-gold text-black font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg shadow-gold/20"
+              className="px-7 py-3 rounded-lg bg-gold text-black font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg shadow-gold/10"
             >
-              {d.ctaDashboard} →
+              {d.heroCta}
             </a>
             <a
-              href="https://github.com/FTHTrading/DR"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 rounded-xl border border-zinc-700 text-zinc-300 font-medium text-sm hover:bg-zinc-900 transition-colors"
+              href="#convergence"
+              className="px-7 py-3 rounded-lg border border-zinc-700 text-zinc-400 font-medium text-sm hover:text-white hover:bg-zinc-900 transition-colors"
             >
-              {d.ctaGitHub}
+              {d.heroCtaSec}
             </a>
           </div>
         </div>
       </section>
 
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+      <Divider />
 
-      {/* ── What it does ─────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-extrabold text-white mb-3">{d.whatTitle}</h2>
-          <p className="text-zinc-400 max-w-xl mx-auto">{d.whatSub}</p>
+      {/* ── Active Signals ────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-6 py-20">
+        <div className="flex items-baseline justify-between mb-10">
+          <div>
+            <h2 className="text-xl font-bold text-white">{d.sitTitle}</h2>
+            <p className="text-xs text-zinc-500 mt-1">{d.sitDate}</p>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] text-zinc-600">
+            <span className="w-1.5 h-1.5 rounded-full bg-dics-green animate-pulse" />
+            DICS Active
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {d.whatSteps.map((step, i) => (
+        <div className="space-y-5">
+          {d.signals.map((sig, i) => (
             <div
               key={i}
-              className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 hover:border-zinc-700 transition-colors"
+              className={`bg-zinc-950 border border-zinc-800 ${SIGNAL_BORDER[sig.color]} border-l-4 rounded-xl p-6 hover:border-zinc-700 transition-colors`}
             >
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">{step.icon}</span>
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    <span className="text-gold mr-2">{i + 1}.</span>
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{step.body}</p>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <span className={`w-2 h-2 rounded-full ${SIGNAL_DOT[sig.color]}`} />
+                <span className={`text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded ${SIGNAL_TAG_BG[sig.color]}`}>
+                  {sig.tag}
+                </span>
+                <span className="text-[11px] text-zinc-600">{sig.date}</span>
+                <span className="ml-auto text-[11px] font-mono text-zinc-500">
+                  Score: <span className="text-white font-bold">{sig.score}</span>
+                </span>
               </div>
+              <h3 className="text-base font-bold text-white mb-2">{sig.title}</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed mb-3">{sig.body}</p>
+              <p className="text-[11px] text-zinc-600 font-mono">{sig.factors}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+      <Divider />
 
-      {/* ── Sectors ──────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-extrabold text-white mb-3">{d.sectorsTitle}</h2>
-          <p className="text-zinc-400 max-w-xl mx-auto">{d.sectorsSub}</p>
+      {/* ── Convergence Thesis ────────────────────────────────── */}
+      <section id="convergence" className="max-w-4xl mx-auto px-6 py-24">
+        <h2 className="text-2xl font-extrabold text-white mb-6">{d.convTitle}</h2>
+        <p className="text-sm text-zinc-400 leading-relaxed mb-12">{d.convBody}</p>
+
+        {/* Convergence visual */}
+        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto text-center mb-4">
+          <PillarCard color="#D4AF37" label={d.convLabel1} icon="⛏️" />
+          <PillarCard color="#1565C0" label={d.convLabel2} icon="📡" />
+          <PillarCard color="#E65100" label={d.convLabel3} icon="🚢" />
+        </div>
+        <div className="flex items-center justify-center">
+          <div className="flex items-center gap-2">
+            <span className="block w-16 h-px bg-zinc-700" />
+            <span className="block w-px h-8 bg-zinc-700" />
+            <span className="block w-16 h-px bg-zinc-700" />
+          </div>
+        </div>
+        <div className="flex justify-center mt-2">
+          <span className="px-4 py-1.5 rounded border border-gold/30 text-gold text-xs font-bold tracking-wider uppercase">
+            {d.convCenter}
+          </span>
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* ── How DICS Works ────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="mb-14">
+          <h2 className="text-2xl font-extrabold text-white mb-3">{d.whatTitle}</h2>
+          <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">{d.whatBody}</p>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {d.pipeline.map((p) => (
+            <div
+              key={p.step}
+              className="bg-zinc-950 border border-zinc-800 rounded-xl p-6 hover:border-zinc-700 transition-colors"
+            >
+              <span className="text-gold font-mono text-xs font-bold">{p.step}</span>
+              <h3 className="text-base font-bold text-white mt-1 mb-2">{p.title}</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">{p.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* ── Sectors ───────────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <h2 className="text-2xl font-extrabold text-white mb-10">{d.sectorsTitle}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {d.sectors.map((s, i) => (
             <div
               key={i}
-              className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 text-center hover:border-gold/40 transition-colors group"
+              className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 text-center hover:border-gold/30 transition-colors group"
             >
-              <span className="text-3xl block mb-3 group-hover:scale-110 transition-transform">
-                {s.icon}
-              </span>
-              <h3 className="text-sm font-bold text-white mb-1">{s.name}</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">{s.body}</p>
+              <span className="text-2xl block mb-2 group-hover:scale-110 transition-transform">{s.icon}</span>
+              <h3 className="text-xs font-bold text-white mb-1">{s.name}</h3>
+              <p className="text-[11px] text-zinc-500 leading-relaxed">{s.body}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+      <Divider />
 
-      {/* ── Stats ────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-2xl font-extrabold text-white text-center mb-12">{d.statsTitle}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* ── Stats ─────────────────────────────────────────────── */}
+      <section className="max-w-4xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {d.stats.map((s, i) => (
             <div key={i} className="text-center">
-              <div className="text-4xl font-extrabold text-gold mb-1">{s.value}</div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wider">{s.label}</div>
+              <div className="text-3xl font-extrabold text-gold mb-1">{s.value}</div>
+              <div className="text-[11px] text-zinc-500 uppercase tracking-wider">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+      <Divider />
 
-      {/* ── How it's built ───────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-extrabold text-white mb-3">{d.builtTitle}</h2>
-          <p className="text-zinc-400 max-w-xl mx-auto">{d.builtSub}</p>
+      {/* ── Architecture ──────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="mb-14">
+          <h2 className="text-2xl font-extrabold text-white mb-3">{d.archTitle}</h2>
+          <p className="text-sm text-zinc-400">{d.archBody}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {d.builtParts.map((p, i) => (
+          {d.archParts.map((p, i) => (
             <div
               key={i}
               className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 hover:border-zinc-700 transition-colors"
             >
-              <h3 className="text-sm font-bold text-gold mb-0.5">{p.label}</h3>
-              <p className="text-[10px] text-zinc-500 font-mono mb-2">{p.tech}</p>
-              <p className="text-xs text-zinc-400 leading-relaxed">{p.desc}</p>
+              <h3 className="text-xs font-bold text-gold mb-0.5">{p.label}</h3>
+              <p className="text-[10px] text-zinc-600 font-mono mb-2">{p.tech}</p>
+              <p className="text-[11px] text-zinc-400 leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+      <Divider />
 
-      {/* ── Architecture diagram ─────────────────────────────── */}
-      <section className="max-w-3xl mx-auto px-6 py-20">
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 font-mono text-xs text-zinc-400">
-          <pre className="overflow-x-auto whitespace-pre leading-6">{`
-  ┌─────────────┐     ┌─────────────┐     ┌──────────────┐
-  │  19 Sources  │────▶│  Collector   │────▶│  PostgreSQL   │
-  │  (gov, trade │     │  (Node.js)   │     │  + pgvector   │
-  │   open data) │     └──────┬──────┘     └──────┬───────┘
-  └─────────────┘            │                    │
-                              ▼                    ▼
-                       ┌─────────────┐     ┌──────────────┐
-                       │  Extractor   │────▶│  Dashboard    │
-                       │  (Python AI) │     │  (Next.js)    │
-                       └─────────────┘     └──────────────┘
-                                                  │
-                                                  ▼
-                                           ┌──────────────┐
-                                           │   Alerts      │
-                                           │  (Cloudflare) │
-                                           └──────────────┘`}
-          </pre>
+      {/* ── Final CTA ─────────────────────────────────────────── */}
+      <section className="max-w-3xl mx-auto px-6 py-24 text-center">
+        <h2 className="text-2xl font-extrabold text-white mb-4">{d.ctaTitle}</h2>
+        <p className="text-sm text-zinc-400 mb-10 max-w-xl mx-auto leading-relaxed">{d.ctaBody}</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="/dashboard"
+            className="px-7 py-3 rounded-lg bg-gold text-black font-bold text-sm hover:bg-yellow-500 transition-colors shadow-lg shadow-gold/10"
+          >
+            {d.ctaConsole}
+          </a>
+          <a
+            href="https://github.com/FTHTrading/DR"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-7 py-3 rounded-lg border border-zinc-700 text-zinc-400 font-medium text-sm hover:text-white hover:bg-zinc-900 transition-colors"
+          >
+            {d.ctaRepo}
+          </a>
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────────── */}
+      {/* ── Footer ────────────────────────────────────────────── */}
       <footer className="border-t border-zinc-800 bg-zinc-950">
-        <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-center sm:text-left">
-            <p className="text-sm text-zinc-400">
-              {d.footerBuilt}{' '}
-              <a
-                href="https://github.com/FTHTrading"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gold hover:underline font-semibold"
-              >
-                {d.footerCompany}
-              </a>
-            </p>
-            <p className="text-xs text-zinc-600 mt-1">{d.footerOpen}</p>
-          </div>
-          <p className="text-xs text-zinc-600">{d.footerTagline}</p>
+        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-600">
+          <p>
+            {d.footerBy}{' '}
+            <a href="https://github.com/FTHTrading" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline font-semibold">
+              {d.footerCo}
+            </a>{' '}
+            · {d.footerLicense}
+          </p>
+          <p>{d.footerTag}</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+/* ── Shared sub-components ─────────────────────────────────────── */
+
+function Divider() {
+  return <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />;
+}
+
+function PillarCard({ color, label, icon }: { color: string; label: string; icon: string }) {
+  return (
+    <div
+      className="bg-zinc-950 border rounded-lg p-4"
+      style={{ borderColor: `${color}33` }}
+    >
+      <span className="text-xl block mb-1">{icon}</span>
+      <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>
+        {label}
+      </span>
     </div>
   );
 }
