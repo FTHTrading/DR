@@ -109,3 +109,77 @@ export interface ConvergenceIndex {
   sectors: ConvergenceSector[];
   computed_at: string;            // ISO timestamp
 }
+
+// ── Projects & Real Assets ────────────────────────────────────────────────────
+
+export interface Project {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  location: string | null;
+  province: string | null;
+  municipality: string | null;
+  land_area_m2: number | null;
+  summary: string | null;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectMetric {
+  metric_key: string;
+  value_num: number | null;
+  value_text: string | null;
+  unit: string | null;
+  source_doc: string | null;
+}
+
+export interface Permit {
+  id: string;
+  permit_type: string;
+  authority: string | null;
+  status: string;
+  doc_hash: string | null;
+  granted_at: string | null;
+  notes: string | null;
+}
+
+export interface PPA {
+  id: string;
+  offtaker: string;
+  price_usd_mwh: number;
+  escalation_pct: number;
+  term_years: number;
+  capacity_mw: number | null;
+  status: string;
+  notes: string | null;
+}
+
+export interface FundingPathway {
+  id: string;
+  pathway: string;
+  label: string;
+  target_usd: number | null;
+  status: string;
+  institution: string | null;
+  next_action: string | null;
+  notes: string | null;
+}
+
+export interface Counterparty {
+  id: string;
+  name: string;
+  role: string;
+  entity_type: string | null;
+  status: string;
+}
+
+export interface ProjectDetail {
+  project: Project;
+  metrics: ProjectMetric[];
+  permits: Permit[];
+  ppas: PPA[];
+  funding_pathways: FundingPathway[];
+  counterparties: Counterparty[];
+}

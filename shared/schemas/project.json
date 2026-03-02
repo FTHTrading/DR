@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/project",
+  "title": "Project",
+  "description": "A bankable asset registered in DICS — energy, real estate, ecotourism, etc.",
+  "type": "object",
+  "required": ["id", "name", "type", "status", "country"],
+  "properties": {
+    "id":            { "type": "string", "description": "Unique slug e.g. SUNFARM_BANI_50MW" },
+    "name":          { "type": "string" },
+    "type":          { "type": "string", "enum": ["solar", "ecotourism", "logistics", "mixed", "wind", "bess", "real_estate"] },
+    "status":        { "type": "string", "enum": ["concept", "pre-development", "shovel-ready", "construction", "operational"] },
+    "location":      { "type": "string" },
+    "province":      { "type": "string" },
+    "municipality":  { "type": "string" },
+    "country":       { "type": "string", "default": "DO" },
+    "lat":           { "type": ["number", "null"] },
+    "lng":           { "type": ["number", "null"] },
+    "land_area_m2":  { "type": ["number", "null"] },
+    "summary":       { "type": "string" },
+    "tags":          { "type": "array", "items": { "type": "string" } },
+    "created_at":    { "type": "string", "format": "date-time" },
+    "updated_at":    { "type": "string", "format": "date-time" }
+  }
+}

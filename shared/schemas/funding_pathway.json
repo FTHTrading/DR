@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/funding_pathway",
+  "title": "Funding Pathway",
+  "description": "A financing lane with required evidence, status, and next action.",
+  "type": "object",
+  "required": ["id", "project_id", "pathway", "label", "status"],
+  "properties": {
+    "id":                 { "type": "string", "format": "uuid" },
+    "project_id":         { "type": "string" },
+    "pathway":            { "type": "string" },
+    "label":              { "type": "string" },
+    "target_usd":         { "type": ["integer", "null"] },
+    "status":             { "type": "string", "enum": ["identified", "qualifying", "application", "approved", "disbursing", "closed"] },
+    "institution":        { "type": ["string", "null"] },
+    "evidence_checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item":     { "type": "string" },
+          "status":   { "type": "string", "enum": ["required", "submitted", "verified"] },
+          "doc_hash": { "type": ["string", "null"] }
+        },
+        "required": ["item", "status"]
+      }
+    },
+    "next_action":        { "type": ["string", "null"] },
+    "notes":              { "type": ["string", "null"] },
+    "created_at":         { "type": "string", "format": "date-time" },
+    "updated_at":         { "type": "string", "format": "date-time" }
+  }
+}

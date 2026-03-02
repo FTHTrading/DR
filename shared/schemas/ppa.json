@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/ppa",
+  "title": "PPA — Power Purchase Agreement",
+  "type": "object",
+  "required": ["id", "project_id", "offtaker", "price_usd_mwh", "term_years", "status"],
+  "properties": {
+    "id":              { "type": "string", "format": "uuid" },
+    "project_id":      { "type": "string" },
+    "offtaker":        { "type": "string" },
+    "price_usd_mwh":   { "type": "number" },
+    "escalation_pct":  { "type": "number", "default": 1.5 },
+    "term_years":      { "type": "integer", "default": 25 },
+    "capacity_mw":     { "type": ["number", "null"] },
+    "status":          { "type": "string", "enum": ["draft", "offered", "negotiating", "executed", "expired"] },
+    "effective_date":  { "type": ["string", "null"], "format": "date" },
+    "notes":           { "type": "string" },
+    "created_at":      { "type": "string", "format": "date-time" },
+    "updated_at":      { "type": "string", "format": "date-time" }
+  }
+}

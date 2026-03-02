@@ -2,6 +2,7 @@ const NAV = [
   { href: '#signals', label: 'Signals', icon: '⚡' },
   { href: '#trends',  label: 'Trends',  icon: '📈' },
   { href: '#risk',    label: 'Risk',    icon: '🎯' },
+  { href: '/dashboard/projects', label: 'Projects', icon: '🏗️' },
   { href: '#sources', label: 'Sources', icon: '📡' },
   { href: '#audit',   label: 'Audit',   icon: '🔒' },
 ];

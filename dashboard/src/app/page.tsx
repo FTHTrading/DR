@@ -118,6 +118,37 @@ const t = {
       { value: '100%', label: 'Auditable Trail' },
     ],
 
+    /* ── Signal → PPA → Funding ────────────────────────────── */
+    fundingTitle: 'From Signal to Funding',
+    fundingSub: 'DICS doesn\u2019t just track news. It turns real assets into bankable, provable, fundable dossiers.',
+    fundingSteps: [
+      { step: '01', label: 'Detect', desc: 'Signals, permits, grid updates, policy changes', icon: '📡', color: '#D4AF37' },
+      { step: '02', label: 'Prove', desc: 'Hashed evidence, audit trail, chain-of-custody', icon: '🔒', color: '#3b82f6' },
+      { step: '03', label: 'Package', desc: 'PPA offer pack, credit memo, investor dossier', icon: '📋', color: '#f59e0b' },
+      { step: '04', label: 'Close', desc: 'Funding pathway checklists, term sheet workflow', icon: '💰', color: '#10b981' },
+    ],
+    assetsTitle: 'Live Assets in the Pipeline',
+    assets: [
+      {
+        icon: '☀️',
+        name: 'SunFarm Baní — 50 MW Solar + 25 MW BESS',
+        status: 'Shovel-Ready',
+        statusColor: '#10b981',
+        kpi: '$90M basis · $70/MWh PPA target · 4 permits granted',
+        desc: 'Fully permitted photovoltaic + battery storage project. 60/40 debt-equity stack. 8 funding pathways identified.',
+        href: '/dashboard/projects/sunfarm',
+      },
+      {
+        icon: '🌿',
+        name: 'Proyecto Ecoturístico Cabrera — 1.17M m²',
+        status: 'Concept',
+        statusColor: '#f59e0b',
+        kpi: '$593M total value · $93M land equity · 380 residential units',
+        desc: 'Master-planned ecotourism destination district. Villas, commercial center, recreation, conservation. Land-contributed equity model.',
+        href: '/dashboard/projects/cabrera',
+      },
+    ],
+
     /* ── CTA ──────────────────────────────────────────────── */
     ctaTitle: 'The signals are already moving.',
     ctaBody: 'DICS surfaces what matters before consensus forms. Access the live intelligence console or explore the open-source architecture.',
@@ -233,6 +264,36 @@ const t = {
       { value: '5', label: 'Sectores Cubiertos' },
       { value: '24/7', label: 'Recolección Continua' },
       { value: '100%', label: 'Rastro Auditable' },
+    ],
+
+    fundingTitle: 'De la Señal al Financiamiento',
+    fundingSub: 'DICS no solo rastrea noticias. Convierte activos reales en dossiers bancables, demostrables y financiables.',
+    fundingSteps: [
+      { step: '01', label: 'Detectar', desc: 'Señales, permisos, actualizaciones de red, cambios de política', icon: '📡', color: '#D4AF37' },
+      { step: '02', label: 'Demostrar', desc: 'Evidencia hash, rastro de auditoría, cadena de custodia', icon: '🔒', color: '#3b82f6' },
+      { step: '03', label: 'Empaquetar', desc: 'Paquete de oferta PPA, memo de crédito, dossier de inversión', icon: '📋', color: '#f59e0b' },
+      { step: '04', label: 'Cerrar', desc: 'Checklists de vías de financiamiento, flujo de term sheets', icon: '💰', color: '#10b981' },
+    ],
+    assetsTitle: 'Activos Vivos en el Pipeline',
+    assets: [
+      {
+        icon: '☀️',
+        name: 'SunFarm Baní — 50 MW Solar + 25 MW BESS',
+        status: 'Listo para Construir',
+        statusColor: '#10b981',
+        kpi: '$90M base · $70/MWh PPA objetivo · 4 permisos otorgados',
+        desc: 'Proyecto fotovoltaico + almacenamiento de baterías totalmente permitido. Estructura deuda-capital 60/40. 8 vías de financiamiento identificadas.',
+        href: '/dashboard/projects/sunfarm',
+      },
+      {
+        icon: '🌿',
+        name: 'Proyecto Ecoturístico Cabrera — 1.17M m²',
+        status: 'Conceptual',
+        statusColor: '#f59e0b',
+        kpi: '$593M valor total · $93M capital en tierra · 380 unidades residenciales',
+        desc: 'Distrito destino ecoturístico planificado. Villas, centro comercial, recreación, conservación. Modelo de capital aportado en tierra.',
+        href: '/dashboard/projects/cabrera',
+      },
     ],
 
     ctaTitle: 'Las señales ya se están moviendo.',
@@ -479,6 +540,59 @@ export default function LandingPage() {
               <p className="text-[10px] text-zinc-600 font-mono mb-2">{p.tech}</p>
               <p className="text-[11px] text-zinc-400 leading-relaxed">{p.desc}</p>
             </div>
+          ))}
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* ── Signal → PPA → Funding ────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="mb-14">
+          <h2 className="text-2xl font-extrabold text-white mb-3">{d.fundingTitle}</h2>
+          <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">{d.fundingSub}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-16">
+          {d.fundingSteps.map((s) => (
+            <div
+              key={s.step}
+              className="bg-zinc-950 border border-zinc-800 rounded-xl p-5"
+              style={{ borderTopColor: s.color, borderTopWidth: 2 }}
+            >
+              <span className="text-2xl block mb-2">{s.icon}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: s.color }}>
+                Step {s.step}
+              </span>
+              <h3 className="text-sm font-bold text-white mt-1">{s.label}</h3>
+              <p className="text-xs text-zinc-500 mt-1">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <h3 className="text-lg font-bold text-white mb-6">{d.assetsTitle}</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {d.assets.map((a) => (
+            <a
+              key={a.name}
+              href={a.href}
+              className="group bg-zinc-950 border border-zinc-800 rounded-xl p-6 hover:border-zinc-600 transition-colors block"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{a.icon}</span>
+                  <h4 className="text-base font-bold text-white group-hover:text-gold transition-colors">{a.name}</h4>
+                </div>
+                <span
+                  className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                  style={{ color: a.statusColor, backgroundColor: `${a.statusColor}22` }}
+                >
+                  {a.status}
+                </span>
+              </div>
+              <p className="text-xs text-gold font-mono mb-2">{a.kpi}</p>
+              <p className="text-sm text-zinc-400 leading-relaxed">{a.desc}</p>
+            </a>
           ))}
         </div>
       </section>

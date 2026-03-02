@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dics/permit",
+  "title": "Permit / Approval",
+  "type": "object",
+  "required": ["id", "project_id", "permit_type", "status"],
+  "properties": {
+    "id":          { "type": "string", "format": "uuid" },
+    "project_id":  { "type": "string" },
+    "permit_type": { "type": "string", "enum": ["cne_concession", "eted_interconnection", "environmental", "land_title", "uso_suelo", "municipal", "water_rights", "road_access"] },
+    "authority":   { "type": ["string", "null"] },
+    "status":      { "type": "string", "enum": ["required", "applied", "granted", "expired", "waived"] },
+    "doc_hash":    { "type": ["string", "null"] },
+    "granted_at":  { "type": ["string", "null"], "format": "date" },
+    "expires_at":  { "type": ["string", "null"], "format": "date" },
+    "notes":       { "type": ["string", "null"] },
+    "created_at":  { "type": "string", "format": "date-time" },
+    "updated_at":  { "type": "string", "format": "date-time" }
+  }
+}
