@@ -29,7 +29,7 @@ jobs:
 
       - name: Build with OpenNext for Cloudflare
         working-directory: dashboard
-        run: npx opennextjs-cloudflare build
+        run: npx opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion
         env:
           NODE_ENV: production
 
